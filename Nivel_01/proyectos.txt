@@ -1,0 +1,72 @@
+🚀 PROYECTO 1 — Analizador de Entradas del Usuario
+📌 Contexto
+    Un programa recibe datos como texto (simulando una API o un formulario).
+🧩 Requisitos
+    Recibe un String con datos separados por ;
+    Cada dato puede ser:
+        Un número entero
+        Un número decimal
+        Texto vacío o con espacios
+    El programa debe:
+        Convertir correctamente los números
+        Ignorar entradas inválidas
+        Contar cuántos valores válidos hay
+        Evitar que el programa falle ante valores nulos
+📤 Entrada de ejemplo
+    " 10 ; 20 ; ; 30.5 ; hola ; null ; 40 "
+📤 Salida esperada (conceptual)
+    Enteros válidos: X
+    Decimales válidos: Y
+    Entradas vacías: Z
+🔥 Lo que se evalúa
+    Manejo de String
+    Uso correcto de wrappers
+    Autoboxing / unboxing seguro
+    Control de NullPointerException
+    Uso eficiente de memoria
+
+
+🚀 PROYECTO 2 — Generador de Reportes de Texto (Optimización)
+📌 Contexto
+    Se necesita generar un reporte grande en texto (simula logs o reportes backend).
+🧩 Requisitos
+    Genera un reporte con 1000 líneas
+    Cada línea debe incluir:
+        Número de línea
+        Texto formateado
+    El reporte final debe ser una sola cadena
+    Debe ser fácil cambiar entre:
+        Implementación ineficiente
+        Implementación optimizada
+📤 Ejemplo de línea
+    Linea 25: procesamiento correcto
+🔥 Lo que se evalúa
+    Uso correcto de String vs StringBuilder
+    Conciencia del impacto en el Heap
+    Inmutabilidad de String
+    Rendimiento en concatenaciones
+
+
+🚀 PROYECTO 3 — Normalizador de Texto para Backend
+📌 Contexto
+    Un backend recibe texto desordenado de múltiples fuentes.
+🧩 Requisitos
+    Recibe un texto largo
+    Normaliza el texto para almacenamiento:
+        Elimina espacios innecesarios
+        Unifica mayúsculas/minúsculas
+        Reemplaza palabras clave
+    Detecta:
+        Texto vacío
+        Texto con solo espacios
+    Devuelve un resultado limpio y consistente
+📤 Entrada ejemplo
+    "   Java   es   GENIAL   "
+📤 Salida esperada
+    "java es genial"
+🔥 Lo que se evalúa
+    trim() / strip()
+    replace()
+    isEmpty() vs isBlank()
+    Manipulación segura de Strings
+    Diseño limpio de métodos

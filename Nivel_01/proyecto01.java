@@ -3,35 +3,49 @@ import java.util.Scanner;
 public class proyecto01 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Ingrese la cadena: ");
-        String cadenaIngresada = sc.nextLine().replace("null", "");
-        String[] elementosCadena = cadenaIngresada.split(";");
-        for (int i = 0 ; i < elementosCadena.length ; i++) {
-            elementosCadena[i] = elementosCadena[i].strip();
-            System.out.println(elementosCadena[i]);
+        System.out.println("Ingrese la cadena (formato: valor1;valor2;...): ");
+        String cadenaIngresada = sc.nextLine();
+        if (cadenaIngresada == null) {
+            System.out.println("Error: entrada nula");
+            sc.close();
+            return;
         }
+        String[] elementosCadena = cadenaIngresada.split(";");
         int enteros = 0;
         int decimales = 0;
         int vacios = 0;
-        for (int i = 0 ; i < elementosCadena.length ; i++) {
-            try {
-                if (elementosCadena[i].isBlank()) {
-                    vacios++;
-                }
-                else if (elementosCadena[i].contains(".")) {
-                    Double.parseDouble(elementosCadena[i]);
-                    decimales++;
-                }
-                else {
-                    Integer.parseInt(elementosCadena[i]);
-                    enteros++;
-                }
+        for (String elemento : elementosCadena) {
+            elemento = elemento.strip();
+            if (elemento.isBlank() || elemento.equalsIgnoreCase("null")) {
+                vacios++;
+                continue;
             }
-            catch (Exception error) {}
+            Integer entero = intentarParsearEntero(elemento);
+            if (entero != null) {
+                enteros++;
+                continue;
+            }
+            Double decimal = intentarParsearDecimal(elemento);
+            if (decimal != null) {
+                decimales++;
+                continue;
+            }
         }
         System.out.println("Enteros Válidos: "+enteros);
         System.out.println("Decimales Válidos: "+decimales);
         System.out.println("Entradas Vacias: "+vacios);
         sc.close();
+    }
+    public static Integer intentarParsearEntero(String elementoString) {
+        try {
+            return Integer.valueOf(elementoString);
+        }
+        catch (NumberFormatException e) {return null;}
+    }
+    public static Double intentarParsearDecimal(String elementoString) {
+        try {
+            return Double.valueOf(elementoString);
+        }
+        catch (NumberFormatException e) {return null;}
     }
 }
