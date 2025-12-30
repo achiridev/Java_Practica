@@ -104,27 +104,69 @@
         Eliminación de break innecesario
         Código limpio y expresivo
 
-🚀 PROYECTO 5 — Procesador de Colecciones (for-each e Iterable)
-📌 Contexto
-    Un sistema procesa colecciones de datos sin conocer su implementación interna.
-🧩 Requisitos
-    Recibe una colección de elementos
-    El sistema debe:
-        Recorrer los elementos sin usar índices
-        Ejecutar una acción sobre cada elemento
-        Permitir detener el procesamiento bajo ciertas condiciones
-    El diseño debe:
-        No depender de List directamente
-        Funcionar con cualquier estructura iterable
-📤 Entrada conceptual
-    Colección de tareas
-📤 Salida conceptual
-    Procesando tarea A
-    Procesando tarea B
-    Procesamiento detenido
-🔥 Lo que se evalúa
-    Uso real de for-each
-    Comprensión de Iterable
-    Diferencia entre Iterator y bucle tradicional
-    Control del flujo durante la iteración
-    
+
+##########################################################
+############ CLASE UTILITARIA java.util.Arrays ###########
+##########################################################
+
+🚀 PROYECTO 5 — Motor de Ranking de Resultados
+    📌 Contexto
+        Un sistema necesita ordenar y clasificar resultados numéricos para mostrar un ranking.
+    🧩 Requisitos
+        El sistema recibe un arreglo de valores numéricos
+        Debe generar un ranking ordenado
+        Se deben realizar búsquedas rápidas de valores específicos
+        El arreglo original no debe modificarse
+        El resultado final debe ser un nuevo arreglo
+    📤 Entrada conceptual
+        [78, 95, 60, 88, 92]
+    📤 Salida conceptual
+        Ranking ordenado: [60, 78, 88, 92, 95]
+        Posición del valor 88: X
+    🔥 Lo que se evalúa
+        Ordenamiento eficiente
+        Búsqueda binaria correcta
+        Manejo seguro de arreglos
+        Comprensión de copias vs referencias
+
+🚀 PROYECTO 6 — Catálogo Inmutable de Datos
+    📌 Contexto
+        Un backend expone un catálogo de valores que no debe modificarse accidentalmente.
+    🧩 Requisitos
+        Parte de un arreglo base de elementos
+        El catálogo debe exponerse como lista
+        El sistema debe:
+            Permitir lectura
+            Rechazar modificaciones estructurales
+        Debe quedar claro qué operaciones están permitidas y cuáles no
+    📤 Entrada conceptual
+        ["A", "B", "C"]
+    📤 Salida conceptual
+        Catalogo cargado correctamente
+        Intento de modificacion rechazado
+    🔥 Lo que se evalúa
+        Uso consciente de Arrays.asList()
+        Entendimiento de listas de tamaño fijo
+        Diferencia entre modificar elementos y estructura
+        Diseño defensivo
+
+🚀 PROYECTO 7 — Gestor de Versiones de Datos
+    📌 Contexto
+        Un sistema mantiene distintas versiones de un conjunto de datos.
+    🧩 Requisitos
+        Parte de un arreglo original
+        Permite crear nuevas versiones del arreglo
+        Cada versión puede:
+            Tener distinto tamaño
+            Mantener los datos anteriores
+        Ninguna versión debe afectar a las demás
+    📤 Entrada conceptual
+        Version 1: [10, 20, 30]
+    📤 Salida conceptual
+        Version 2: [10, 20, 30, 40]
+        Version 3: [10, 20]
+    🔥 Lo que se evalúa
+        Uso correcto de copias de arreglos
+        Manejo de memoria
+        Inmutabilidad por diseño
+        Uso correcto de utilidades estándar
