@@ -1,0 +1,151 @@
+##########################################################
+################## ESTRUCTURA DE CLASES ##################
+##########################################################
+
+🚀 PROYECTO 1 — Sistema de Cuentas Bancarias (Modificadores de Acceso)
+    📌 Situación real
+        Estás programando el núcleo de un sistema bancario.
+        No cualquier parte del sistema debe poder ver o modificar los datos de una cuenta.
+    🧩 Requisitos reales
+        Existe una clase CuentaBancaria
+        La cuenta tiene:
+            Número de cuenta
+            Saldo
+            Tipo de cuenta
+        Reglas reales:
+            El saldo no puede modificarse directamente desde fuera
+            El número de cuenta no debe cambiar nunca
+            El tipo de cuenta solo puede ser usado por clases del mismo módulo
+        Existe un paquete externo que intenta:
+            Consultar datos permitidos
+            Modificar datos que no debería poder
+    📤 Resultado esperado (conceptual)
+        Saldo actualizado correctamente
+        Acceso denegado
+    🔥 Se evalúa
+        Uso real de private
+        Uso real de default (package-private)
+        Uso de public solo donde corresponde
+        Encapsulación como en un sistema financiero
+
+🚀 PROYECTO 2 — Registro de Usuarios (Constructores y Herencia)
+    📌 Situación real
+        Un backend registra usuarios provenientes de distintas fuentes.
+    🧩 Requisitos reales
+        Existe una clase base Usuario
+        Todo usuario debe tener:
+            ID
+            Fecha de registro
+        Existen múltiples formas de registrar usuarios:
+            Registro manual
+            Registro automático del sistema
+        Las reglas:
+            Todos los usuarios deben quedar válidos
+            No se puede repetir lógica entre constructores
+            La inicialización debe ser clara y segura
+    📤 Resultado esperado (conceptual)
+        Usuario registrado con ID: 1024
+    🔥 Se evalúa
+        Uso real de this() para encadenar constructores
+        Uso correcto de super()
+        Comprensión del orden de inicialización
+        Diseño limpio de constructores
+
+🚀 PROYECTO 3 — Configuración Global del Sistema (static y final)
+    📌 Situación real
+        Tu aplicación necesita configuración global: puertos, nombre de app, modo debug.
+    🧩 Requisitos reales
+    Existe una clase AppConfig
+    Reglas estrictas:
+        No debe poder heredarse
+        Los valores no deben cambiar en tiempo de ejecución
+        La configuración se carga una sola vez
+    La app debe:
+        Acceder a los valores desde cualquier clase
+        Ejecutar lógica al arrancar la aplicación
+    📤 Resultado esperado (conceptual)
+        Cargando configuracion...
+        Aplicacion iniciada en puerto 8080
+    🔥 Se evalúa
+        Uso real de static
+        Uso real de final
+        Bloques estáticos de inicialización
+        Constantes públicas
+        Diseño inmutable como en backend real
+
+🚀 PROYECTO 4 — Sistema de Notificaciones (Error Crítico sin @Override)
+    📌 Situación real
+        Tu backend envía notificaciones por distintos canales: email, SMS y push.
+        Un bug llegó a producción porque una clase creía estar sobrescribiendo un método… pero no lo estaba.
+    🧩 Requisitos reales
+        Existe una clase base Notificacion
+        Define un método para enviar el mensaje
+        Existen implementaciones concretas:
+            Email
+            SMS
+            Push
+        El sistema:
+            Ejecuta el envío desde una referencia del tipo base
+            Debe garantizar que cada implementación se ejecute correctamente
+        Cualquier error de sobrescritura debe detectarse en compilación
+    📤 Resultado esperado (conceptual)
+        Enviando email...
+        Enviando SMS...
+        Enviando push...
+    🔥 Se evalúa
+        Uso obligatorio de @Override
+        Prevención de errores por firmas mal escritas
+        Polimorfismo real
+        Código seguro para producción
+
+🚀 PROYECTO 5 — Procesador de Pagos (Casting Seguro)
+    📌 Situación real
+        Un sistema procesa pagos que llegan desde distintas pasarelas.
+    🧩 Requisitos reales
+        Existe una clase base Pago
+        Existen distintos tipos de pago:
+            Tarjeta
+            Transferencia
+            Criptomoneda
+        El sistema recibe una referencia genérica (Pago)
+        Antes de ejecutar lógica específica:
+            Debe verificar el tipo real del objeto
+            Nunca debe lanzar ClassCastException
+        El flujo debe ser claro y mantenible
+    📤 Resultado esperado (conceptual)
+        Procesando pago con tarjeta
+        Procesando transferencia bancaria
+        Procesando pago con criptomoneda
+    🔥 Se evalúa
+        Uso correcto de instanceof
+        Casting seguro
+        Diseño defensivo
+        Código robusto en tiempo de ejecución
+
+🚀 PROYECTO 6 — Motor de Reglas (Pattern Matching for instanceof)
+    📌 Situación real
+        Un backend aplica reglas distintas según el tipo de evento recibido.
+    🧩 Requisitos reales
+        Existe una jerarquía de eventos:
+            EventoUsuario
+            EventoSistema
+            EventoError
+        El sistema recibe eventos como tipo base
+        Debe:
+            Detectar el tipo concreto
+            Ejecutar lógica específica
+            Evitar casts explícitos repetitivos
+        El código debe ser:
+            Legible
+            Moderno
+            Fácil de extender
+    📤 Resultado esperado (conceptual)
+        Evento de usuario procesado
+        Evento del sistema procesado
+        Evento de error procesado
+    🔥 Se evalúa
+        Uso de instanceof con pattern matching (Java 14+)
+        Eliminación de casts manuales
+        Código limpio y expresivo
+        Buen diseño orientado a objetos
+
