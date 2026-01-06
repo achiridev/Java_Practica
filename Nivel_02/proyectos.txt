@@ -149,3 +149,61 @@
         Código limpio y expresivo
         Buen diseño orientado a objetos
 
+🚀 PROYECTO 7 — Sistema de Clientes (CRM básico)
+    📌 Caso real
+        Estás creando un sistema de clientes para una empresa.
+        El sistema no debe permitir clientes duplicados con el mismo DNI.
+    🧩 Requisitos
+        Crea una clase Cliente con:
+            dni (String)
+            nombre (String)
+            email (String)
+        Sobrescribe correctamente:
+            toString()
+            equals(Object o)
+            hashCode()
+    ⚠️ Regla de negocio real
+        Dos clientes son el mismo cliente si tienen el mismo DNI, aunque cambien el nombre o el email.
+    🛠️ Funcionalidad a probar
+        Guarda clientes en un HashSet<Cliente>
+        Intenta agregar dos clientes con el mismo DNI
+        Verifica que solo exista uno
+
+🚀 PROYECTO 8 — Control de Productos en un Almacén
+    📌 Caso real
+        Un almacén necesita controlar productos únicos por código de barras.
+    🧩 Requisitos
+        Clase Producto:
+            codigoBarras (String)
+            nombre
+            precio
+        Sobrescribe:
+            toString() → Para mostrar inventario
+            equals() y hashCode()
+    ⚠️ Regla de negocio real
+        Dos productos son iguales si tienen el mismo código de barras, no importa el precio.
+    🛠️ Funcionalidad a probar
+        Usa HashMap<Producto, Integer
+            (Producto → cantidad en stock)
+        Agrega un producto
+        Agrega otro con el mismo código
+        Verifica que actualiza la cantidad y no crea otra entrada
+
+🚀 PROYECTO 9 — Sistema de Usuarios para Login
+📌 Caso real
+    Estás desarrollando un backend de autenticación.
+🧩 Requisitos
+    Clase Usuario:
+        username
+        password
+        rol
+    Sobrescribe:
+        toString() (⚠️ sin mostrar la contraseña)
+        equals() y hashCode()
+⚠️ Regla de seguridad real
+    Dos usuarios son iguales si tienen el mismo username.
+🛠️ Funcionalidad a probar
+    Guarda usuarios en un HashSet
+    Intenta registrar dos usuarios con el mismo username
+    El sistema debe impedirlo
+
