@@ -1,0 +1,82 @@
+##########################################################
+################## GENERICS (GENERICOS) ##################
+##########################################################
+
+🚀 PROYECTO 1 — Repositorio Genérico (DAO básico)
+    📌 Caso real
+        Estás creando la capa de acceso a datos de un backend.
+        No quieres repetir código para Usuario, Producto, Cliente, etc.
+    🧩 Requisitos
+        Crea una clase genérica:
+            public class Repositorio<T>
+        Debe permitir:
+            guardar(T entidad)
+            eliminar(T entidad)
+            List<T> listar()
+    🛠️ Condiciones
+        Usa List<T> internamente
+        Implementa toString() para mostrar el contenido
+        Crea al menos 2 entidades distintas:
+            Usuario
+            Producto
+        Usa el mismo repositorio para ambos
+    🧠 Aprendes
+        ✔ Sintaxis <T>
+        ✔ Reutilización real de código
+        ✔ Cómo Java mantiene seguridad de tipos
+        ✔ Por qué no puedes hacer new T()
+
+🚀 PROYECTO 2 — Procesador de Listas con Wildcards
+    📌 Caso real
+        Estás escribiendo utilidades comunes que trabajan con listas de diferentes tipos, pero sin modificarlas.
+    🧩 Requisitos
+        Crea una clase ProcesadorListas con métodos:
+        1️⃣ Método SOLO lectura (Upper Bound)
+            public static void imprimirNombres(List<? extends Persona> lista)
+            Persona tiene getNombre()
+            Acepta List<Persona>, List<Empleado>, List<Cliente>
+            ❌ No permite agregar elementos
+        2️⃣ Método SOLO escritura (Lower Bound)
+            public static void agregarEmpleado(List<? super Empleado> lista)
+            Permite agregar Empleado
+            Acepta List<Empleado>, List<Persona>, List<Object>
+    🧠 Regla de oro (real)
+        PECS
+        Producer → extends
+        Consumer → super
+    🧠 Aprendes
+        ✔ List<?>
+        ✔ ? extends T (solo leer)
+        ✔ ? super T (solo escribir)
+        ✔ Errores típicos del compilador
+
+🚀 PROYECTO 3 — Sistema de Cache Genérico (Type Erasure en acción)
+    📌 Caso real
+        Implementas un sistema de cache reutilizable para distintos tipos.
+    🧩 Requisitos
+        Crea una clase:
+            public class Cache<K, V>
+        Debe permitir:
+            put(K clave, V valor)
+            V get(K clave)
+            boolean contieneClave(K clave)
+    🛠️ Restricciones clave
+        Usa internamente un HashMap<K, V>
+        NO puedes hacer:
+            if (valor instanceof V) { }
+    🧠 Pregunta crítica
+        ¿Por qué esto NO compila?
+            if (obj instanceof V) { }
+    🧠 Type Erasure explicado (en este ejercicio)
+        En tiempo de ejecución:
+            Cache<String, Usuario>
+            Cache<Integer, Producto>
+        ➡️ Ambos se convierten en:
+            Cache
+        👉 Los tipos genéricos desaparecen
+    🧠 Aprendes
+        ✔ <K, V> en escenarios reales
+        ✔ Límites reales del runtime
+        ✔ Por qué Java usa Type Erasure
+        ✔ Comparación con otros lenguajes (C#, Kotlin)
+

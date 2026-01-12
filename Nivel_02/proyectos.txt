@@ -73,6 +73,10 @@
         Constantes públicas
         Diseño inmutable como en backend real
 
+##########################################################
+################ HERENCIA Y POLIMORFISMO #################
+##########################################################
+
 🚀 PROYECTO 4 — Sistema de Notificaciones (Error Crítico sin @Override)
     📌 Situación real
         Tu backend envía notificaciones por distintos canales: email, SMS y push.
@@ -148,6 +152,10 @@
         Eliminación de casts manuales
         Código limpio y expresivo
         Buen diseño orientado a objetos
+
+##########################################################
+#################### LA CLASE OBJECT #####################
+##########################################################
 
 🚀 PROYECTO 7 — Sistema de Clientes (CRM básico)
     📌 Caso real
