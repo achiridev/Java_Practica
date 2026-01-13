@@ -80,3 +80,74 @@
         ✔ Por qué Java usa Type Erasure
         ✔ Comparación con otros lenguajes (C#, Kotlin)
 
+##########################################################
+########################## LIST ##########################
+##########################################################
+
+🚀 PROYECTO 4 — Historial de acciones de un usuario
+    📌 Caso real
+        Estás desarrollando un sistema que guarda el historial de acciones de un usuario (login, ver perfil, cerrar sesión, etc.).
+        Las acciones se agregan constantemente y a veces se eliminan las más antiguas.
+    🧩 Requisitos
+        Clase Accion con:
+            tipo
+            fechaHora
+        Una lista para almacenar el historial
+        Métodos:
+            agregarAccionInicio(Accion accion)
+            eliminarUltimaAccion()
+            mostrarHistorial()
+    🛠️ Condiciones
+        Usa LinkedList<Accion>
+        Inserta acciones al inicio de la lista
+        Elimina acciones del final
+        No usar índices directamente (get(i))
+    🧠 Aprendes
+        Por qué LinkedList es ideal para inserciones/eliminaciones
+        Diferencia real entre nodos vs array
+        Coste oculto de add(0, elemento) en ArrayList
+
+🚀 PROYECTO 5 — Catálogo de productos (lectura intensiva)
+    📌 Caso real
+        Un e-commerce carga un catálogo de productos que se consulta miles de veces por segundo, pero casi no cambia.
+    🧩 Requisitos
+        Clase Producto:
+            id
+            nombre
+            precio
+        Lista de productos
+        Métodos:
+            buscarProductoPorIndice(int i)
+            listarProductos()
+    🛠️ Condiciones
+        Usa ArrayList<Producto>
+        Accede a productos usando get(i)
+        No elimines ni insertes en medio de la lista
+    🧠 Aprendes
+        Por qué ArrayList es superior para lectura
+        Acceso directo O(1)
+        Casos donde LinkedList es una mala elección
+
+🚀 PROYECTO 6 — Cola de tareas en un servidor
+    📌 Caso real
+        Un servidor procesa tareas en orden de llegada (FIFO).
+        Las tareas entran y salen constantemente.
+    🧩 Requisitos
+        Clase Tarea:
+            id
+            descripcion
+        Lista de tareas pendientes
+        Métodos:
+            agregarTarea(Tarea tarea)
+            procesarSiguiente()
+            verTareasPendientes()
+    🛠️ Condiciones
+        Usa LinkedList<Tarea>
+        Agrega tareas al final
+        Procesa tareas desde el inicio
+        No usar ArrayList
+    🧠 Aprendes
+        Implementar una cola real con List
+        Por qué remove(0) es costoso en ArrayList
+        Uso correcto de LinkedList como estructura dinámica
+
