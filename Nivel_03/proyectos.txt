@@ -151,3 +151,115 @@
         Por qué remove(0) es costoso en ArrayList
         Uso correcto de LinkedList como estructura dinámica
 
+##########################################################
+########################## SET ###########################
+##########################################################
+
+🚀 PROYECTO 7 — Registro de correos únicos (newsletter)
+    📌 Caso real
+        Un sistema de newsletter debe almacenar correos electrónicos de usuarios sin permitir duplicados, y el orden no importa.
+    🧩 Requisitos
+        Clase Correo o usar directamente String
+        Un conjunto para almacenar los correos registrados
+        Métodos:
+            registrarCorreo(String email)
+            mostrarCorreos()
+            totalCorreos()
+    🛠️ Condiciones
+        Usa HashSet<String>
+        No permitir correos duplicados
+        No asumir ningún orden al imprimir
+        Mostrar el total de correos únicos
+    🧠 Aprendes
+        Qué significa realmente “sin duplicados”
+        Por qué HashSet no mantiene orden
+        Uso real de hashCode() y equals()
+
+🚀 PROYECTO 8 — Historial de dispositivos conectados
+    📌 Caso real
+        Un sistema registra los dispositivos que se han conectado a una red, y necesita mostrar el orden exacto en el que se conectaron.
+    🧩 Requisitos
+        Clase Dispositivo:
+            id
+            nombre
+        Un conjunto de dispositivos
+        Métodos:
+            conectarDispositivo(Dispositivo d)
+            mostrarDispositivosConectados()
+    🛠️ Condiciones
+        Usa LinkedHashSet<Dispositivo>
+        Evitar dispositivos duplicados por id
+        Mantener el orden de inserción
+        Sobrescribir equals() y hashCode()
+    🧠 Aprendes
+        Diferencia práctica entre HashSet y LinkedHashSet
+        Por qué el orden puede ser importante
+        Casos reales donde el orden de inserción importa
+
+🚀 PROYECTO 9 — Ranking de puntuaciones (orden automático)
+📌 Caso real
+    Un videojuego mantiene un ranking de puntuaciones, donde no se repiten puntajes y deben mostrarse ordenados.
+🧩 Requisitos
+    Clase Puntaje:
+        valor
+        jugador
+    Un conjunto de puntajes
+    Método:
+        mostrarRanking()
+🛠️ Condiciones
+    Usa TreeSet<Puntaje>
+    Ordenar por:
+        Puntaje descendente
+        Si empatan, ordenar por nombre del jugador
+    Implementar Comparable o usar un Comparator
+🧠 Aprendes
+    Qué hace especial a TreeSet
+    Orden natural vs orden personalizado
+    Diferencia entre igualdad lógica y ordenamiento
+
+##########################################################
+########################## MAP ###########################
+##########################################################
+
+🚀 PROYECTO 10 — Conteo de visitas a páginas (analítica web)
+    📌 Caso real
+        Un sistema de analítica registra cuántas veces se visita cada página de un sitio web.
+        El orden no importa, lo importante es contar rápido.
+    🧩 Requisitos
+        Usar la URL de la página como clave (String)
+        Usar el número de visitas como valor (Integer)
+        Métodos:
+            registrarVisita(String url)
+            mostrarEstadisticas()
+    🛠️ Condiciones
+        Usar HashMap<String, Integer>
+        Incrementar visitas usando:
+            containsKey() o
+            getOrDefault()
+        Recorrer el mapa con entrySet()
+        No asumir ningún orden al imprimir
+    🧠 Aprendes
+        Funcionamiento práctico de HashMap
+        Relación entre hashCode, colisiones y buckets
+        Uso correcto de getOrDefault() y entrySet()
+
+🚀 PROYECTO 11 — Agenda telefónica ordenada
+    📌 Caso real
+        Una agenda de contactos debe mostrarse ordenada alfabéticamente por nombre, sin importar el orden de inserción.
+    🧩 Requisitos
+        Clave: nombre del contacto (String)
+        Valor: número telefónico (String)
+        Métodos:
+            agregarContacto(String nombre, String telefono)
+            buscarTelefono(String nombre)
+            mostrarAgenda()
+    🛠️ Condiciones
+        Usar TreeMap<String, String>
+        Obtener teléfonos con get()
+        Verificar existencia con containsKey()
+        Mostrar la agenda recorriendo keySet() o entrySet()
+    🧠 Aprendes
+        Orden automático de claves en TreeMap
+        Diferencia real entre HashMap y TreeMap
+        Cuándo el orden es responsabilidad del Map
+
