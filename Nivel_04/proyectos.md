@@ -206,3 +206,125 @@ Un backend genera tareas automáticamente y luego decide:
 - Pensar en funciones como piezas enchufables
 - Diseño limpio sin `if` ni clases innecesarias
 - Base sólida para entender `stream()`
+
+# Referencias a Métodos
+
+## 🚀 PROYECTO 7 — Registro de logs del sistema
+
+### 📌 Caso real
+
+Un backend registra mensajes de log (info, warning, error).  
+El sistema primero usaba **lambdas**, pero quieres **mejorar legibilidad** usando **referencias a métodos**.
+
+### 🧩 Requisitos
+
+- Clase `Logger` con:
+  - Método **estático** `log(String mensaje)`
+- Una lista de mensajes (`List<String>`)
+- Mostrar todos los mensajes usando `forEach`
+
+### 🛠️ Condiciones
+
+- Implementar primero el recorrido con **lambda**
+- Luego reemplazar la lambda por:
+  - Referencia a método estático (`Clase::metodo`)
+- Usar `forEach()` directamente sobre la lista
+- No usar `stream()`
+
+### 🧠 Aprendes
+
+- Cuándo una lambda se puede convertir en referencia a método
+- Referencia a método **estático**
+- Qué recibe realmente `forEach()` (un `Consumer`)
+- Cómo Java interpreta `System.out::println`
+
+## 🚀 PROYECTO 8 — Procesamiento de usuarios con métodos de instancia
+
+### 📌 Caso real
+
+Un sistema tiene una lista de usuarios y necesita:
+
+- Mostrar nombres
+- Ejecutar acciones propias del objeto  
+  El código debe ser **limpio y expresivo**.
+
+### 🧩 Requisitos
+
+- Clase `Usuario`:
+  - `nombre`
+  - Método de instancia `mostrarNombre()`
+- Lista de usuarios
+- Ejecutar acciones sobre cada usuario usando `forEach`
+
+### 🛠️ Condiciones
+
+- Usar **método de instancia arbitraria**:
+  - `Usuario::mostrarNombre`
+- Comparar con la versión usando lambda
+- No usar clases anónimas
+- No usar `stream()`
+
+### 🧠 Aprendes
+
+- Referencia a método de instancia arbitraria
+- Cómo Java pasa cada elemento como `this`
+- Relación entre `forEach()` y `Consumer<T>`
+- Por qué las referencias a métodos **mejoran la legibilidad**
+
+# Creación stream(), of()
+
+## 🚀 PROYECTO 9 — Procesamiento de nombres sin modificar la lista original
+
+### 📌 Caso real
+
+Un sistema tiene una **lista de nombres de usuarios** que se usa en varias partes del backend.  
+Necesitas **procesarlos para mostrarlos**, pero **no debes modificar la lista original**.
+
+### 🧩 Requisitos
+
+- Lista de nombres (`List<String>`)
+- Crear un `Stream` a partir de la lista
+- Imprimir cada nombre usando `forEach()`
+
+### 🛠️ Condiciones
+
+- Crear el stream usando **`collection.stream()`**
+- Usar `forEach()` con:
+  - Lambda
+  - Referencia a método
+- Verificar que la lista original **permanece intacta**
+- Intentar reutilizar el mismo stream y observar el error
+
+### 🧠 Aprendes
+
+- Qué es realmente un Stream
+- Diferencia entre **almacenar** y **procesar**
+- Por qué un stream **no se puede reutilizar**
+- Comparación práctica entre Colecciones y Streams
+
+## 🚀 PROYECTO 10 — Procesamiento de datos generados dinámicamente
+
+### 📌 Caso real
+
+Un backend necesita **procesar valores temporales** (IDs, códigos, resultados) que **no vienen de una colección**.
+
+### 🧩 Requisitos
+
+- Crear streams directamente desde valores
+- Imprimir los elementos usando `forEach()`
+
+### 🛠️ Condiciones
+
+- Crear un stream usando **`Stream.of()`**
+- Usar al menos:
+  - Un stream de `String`
+  - Un stream de `Integer`
+- Probar crear un stream con `null`
+- Usar la alternativa segura cuando corresponda
+
+### 🧠 Aprendes
+
+- Cuándo usar `Stream.of()` vs `collection.stream()`
+- Que un stream **no necesita una colección**
+- Riesgo real de `NullPointerException`
+- Introducción a `Stream.ofNullable()`
