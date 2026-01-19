@@ -22,8 +22,8 @@ public class Main {
                     imprimirLI.accept(codigo+" Canjeado: "+canjeado);
                 });
         try {
-            Stream.of(null)
-                    .forEach(System.out::println);
+            //Stream.of(null)
+            //        .forEach(System.out::println);
         }
         catch (NullPointerException e){
             System.err.println("\n"+e.getMessage());

@@ -98,6 +98,7 @@ Un sistema necesita validar datos de distintas formas:
 - Diferencia entre **definir el contrato** y **definir la lógica**
 - Diseño flexible sin if/else gigantes
 
+---
 # Paquete java.util.function
 
 ## 🚀 PROYECTO 4 — Registro y validación de usuarios
@@ -207,6 +208,7 @@ Un backend genera tareas automáticamente y luego decide:
 - Diseño limpio sin `if` ni clases innecesarias
 - Base sólida para entender `stream()`
 
+---
 # Referencias a Métodos
 
 ## 🚀 PROYECTO 7 — Registro de logs del sistema
@@ -271,6 +273,7 @@ Un sistema tiene una lista de usuarios y necesita:
 - Relación entre `forEach()` y `Consumer<T>`
 - Por qué las referencias a métodos **mejoran la legibilidad**
 
+---
 # Creación stream(), of()
 
 ## 🚀 PROYECTO 9 — Procesamiento de nombres sin modificar la lista original
@@ -328,3 +331,127 @@ Un backend necesita **procesar valores temporales** (IDs, códigos, resultados) 
 - Que un stream **no necesita una colección**
 - Riesgo real de `NullPointerException`
 - Introducción a `Stream.ofNullable()`
+
+---
+# Operaciones Intermedias
+
+## 🚀 PROYECTO 11 — Filtrado y transformación de usuarios activos
+
+### 📌 Caso real
+
+Un backend gestiona usuarios registrados, pero **solo algunos están activos**.  
+Necesitas **filtrar**, **transformar** y **mostrar** información sin modificar la lista original.
+
+### 🧩 Requisitos
+
+- Clase `Usuario`:
+  - `nombre`
+  - `edad`
+  - `activo`
+- Lista de usuarios
+
+### 🛠️ Condiciones
+
+- Usar `stream()`
+- Aplicar:
+  - `filter()` → solo usuarios activos y mayores de edad
+  - `map()` → convertir el usuario a su nombre en mayúsculas
+- Terminar con `forEach()`
+- No modificar la lista original
+
+### 🧠 Aprendes
+
+- Qué son operaciones intermedias
+- Uso real de `filter(Predicate)`
+- Transformación con `map(Function)`
+- Encadenamiento lazy de streams
+
+## 🚀 PROYECTO 12 — Procesamiento de pedidos con productos anidados
+
+### 📌 Caso real
+
+Un sistema de ventas maneja **pedidos**, y cada pedido contiene **una lista de productos**.  
+Necesitas **procesar todos los productos como si fueran uno solo**.
+
+### 🧩 Requisitos
+
+- Clase `Producto`:
+  - `nombre`
+  - `precio`
+- Clase `Pedido`:
+  - `List<Producto> productos`
+- Lista de pedidos
+
+### 🛠️ Condiciones
+
+- Usar:
+  - `flatMap()` para obtener todos los productos
+  - `map()` para extraer el nombre del producto
+- Mostrar cada producto individualmente
+- No usar bucles `for`
+
+### 🧠 Aprendes
+
+- Problema real que resuelve `flatMap()`
+- Diferencia entre `map()` y `flatMap()`
+- Aplanar estructuras anidadas
+- Pensamiento funcional real
+
+## 🚀 PROYECTO 13 — Ranking de puntuaciones únicas
+
+### 📌 Caso real
+
+Un videojuego genera **muchas puntuaciones**, pero:
+
+- Puede haber duplicados
+- Solo interesan las **mejores puntuaciones**
+- Deben mostrarse ordenadas
+
+### 🧩 Requisitos
+
+- Lista de puntuaciones (`List<Integer>`)
+
+### 🛠️ Condiciones
+
+- Usar:
+  - `distinct()` → eliminar duplicados
+  - `sorted()` → ordenar de mayor a menor
+  - `limit(5)` → mostrar solo el top 5
+- Encadenar todas las operaciones
+- Terminar con `forEach()`
+
+### 🧠 Aprendes
+
+- Uso combinado de operaciones intermedias
+- Eliminación de duplicados con `distinct()`
+- Orden natural y personalizado
+- Control de cantidad con `limit()`
+
+## 🚀 PROYECTO 14 — Limpieza y orden de datos de texto
+
+### 📌 Caso real
+
+Un sistema recibe **palabras duplicadas y desordenadas** desde distintas fuentes.  
+Necesitas **normalizar y mostrar solo las más relevantes**.
+
+### 🧩 Requisitos
+
+- Lista de palabras (`List<String>`)
+
+### 🛠️ Condiciones
+
+- Usar:
+  - `map()` → convertir todas a mayúsculas
+  - `distinct()` → eliminar duplicados
+  - `sorted()` → ordenar alfabéticamente
+  - `limit(3)` → mostrar solo las primeras
+- Usar `stream()` y `forEach()`
+
+### 🧠 Aprendes
+
+- Encadenamiento completo de streams
+- Transformación + limpieza + orden
+- Naturaleza lazy de las operaciones intermedias
+- Pensar en streams como pipelines
+
+---
