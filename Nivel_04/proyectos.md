@@ -455,3 +455,122 @@ Necesitas **normalizar y mostrar solo las más relevantes**.
 - Pensar en streams como pipelines
 
 ---
+# Operaciones terminales
+
+## 🚀 PROYECTO 15 — Limpieza y reporte de nombres válidos
+
+### 📌 Caso real
+
+Un sistema recibe nombres de usuarios desde distintas fuentes.  
+Necesitas **filtrar**, **procesar** y **obtener una lista final** para usarla en otro módulo.
+
+### 🧩 Requisitos
+
+- Lista de nombres (`List<String>`)
+- Filtrar nombres con más de 3 caracteres
+- Obtener una nueva lista con los nombres válidos
+
+### 🛠️ Condiciones
+
+- Usar `stream()`
+- Usar una operación intermedia (`filter`)
+- Usar **`collect(Collectors.toList())`** como operación terminal
+- Imprimir la lista resultante
+- No modificar la lista original
+
+### 🧠 Aprendes
+
+- Qué hace una operación terminal
+- Por qué `collect()` **consume** el stream
+- Conversión de `Stream` a `List`
+- Diferencia entre describir el proceso y obtener el resultado
+
+## 🚀 PROYECTO 16 — Agrupación de empleados por departamento
+
+### 📌 Caso real
+
+Un backend necesita **agrupar empleados por departamento** para generar reportes internos.
+
+### 🧩 Requisitos
+
+- Clase `Empleado`:
+  - `nombre`
+  - `departamento`
+- Lista de empleados
+- Agrupar empleados por departamento
+
+### 🛠️ Condiciones
+
+- Usar `stream()`
+- Usar **`Collectors.groupingBy()`**
+- Obtener un `Map<String, List<Empleado>>`
+- Mostrar cada departamento con sus empleados
+
+### 🧠 Aprendes
+
+- Uso real de `collect()` para agrupar datos
+- Cómo un stream termina en un `Map`
+- Por qué `groupingBy` es clave en backend
+- Reemplazar lógica compleja con una terminal clara
+
+## 🚀 PROYECTO 17 — Estadísticas básicas de ventas
+
+### 📌 Caso real
+
+Un sistema de ventas necesita **estadísticas rápidas** sobre montos registrados.
+
+### 🧩 Requisitos
+
+- Lista de montos de venta (`List<Integer>`)
+- Obtener:
+  - Total de ventas registradas
+  - Venta mínima
+  - Venta máxima
+
+### 🛠️ Condiciones
+
+- Usar:
+  - `count()`
+  - `min()`
+  - `max()`
+- Usar `Integer::compareTo` o lambda
+- Mostrar los resultados encontrados
+
+### 🧠 Aprendes
+
+- Operaciones terminales que devuelven valores
+- Diferencia entre `count`, `min` y `max`
+- Que cada operación **consume** el stream
+- Uso típico de streams para métricas
+
+## 🚀 PROYECTO 18 — Cálculo de totales y búsqueda rápida
+
+### 📌 Caso real
+
+Un sistema financiero necesita:
+
+- Calcular el **total acumulado**
+- Encontrar **un valor representativo** rápidamente
+
+### 🧩 Requisitos
+
+- Lista de números (`List<Integer>`)
+- Calcular la suma total
+- Obtener un número del stream para validación
+
+### 🛠️ Condiciones
+
+- Usar:
+  - **`reduce()`** para sumar todos los valores
+  - **`findFirst()`** o **`findAny()`** para obtener un elemento
+- Mostrar los resultados obtenidos
+- No usar bucles `for`
+
+### 🧠 Aprendes
+
+- Cómo `reduce()` combina todos los elementos
+- Diferencia entre reducir y recolectar
+- Uso práctico de `findFirst` y `findAny`
+- Qué significa que el stream “muera” tras una terminal
+
+---
