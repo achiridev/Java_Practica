@@ -574,3 +574,219 @@ Un sistema financiero necesita:
 - Qué significa que el stream “muera” tras una terminal
 
 ---
+# Optional creación
+
+## 🚀 PROYECTO 19 — Búsqueda segura de usuario por email
+
+### 📌 Caso real
+
+Un backend necesita **buscar un usuario por email** en la base de datos.  
+El usuario **puede existir o no**, y **NO se quiere usar `null`**.
+
+### 🧩 Requisitos
+
+- Clase `Usuario`:
+  - `email`
+  - `nombre`
+- Clase `RepositorioUsuario`
+- Método:
+  - `Optional<Usuario> buscarPorEmail(String email)`
+
+### 🛠️ Condiciones
+
+- Simular una base de datos que **puede devolver `null`**
+- Retornar el resultado usando:
+  - `Optional.ofNullable(valor)`
+- En el código cliente:
+  - Usar `isPresent()` y `get()` **solo para entender el flujo**
+  - Luego usar `ifPresent()` para mostrar el nombre
+- No devolver `null` nunca
+
+### 🧠 Aprendes
+
+- Qué es `Optional` y por qué reemplaza a `null`
+- Uso real de `Optional.ofNullable()`
+- Diferencia entre **valor ausente** y **valor nulo**
+- Patrón clásico de repositorio en backend
+
+## 🚀 PROYECTO 20 — Obtención de configuración opcional del sistema
+
+### 📌 Caso real
+
+Un backend carga configuraciones desde variables de entorno o archivos.  
+Algunas configuraciones **pueden no existir**.
+
+### 🧩 Requisitos
+
+- Clase `ConfiguracionService`
+- Método:
+  - `Optional<String> obtenerValor(String clave)`
+- Simular:
+  - Configuración existente
+  - Configuración inexistente
+
+### 🛠️ Condiciones
+
+- Usar:
+  - `Optional.of(valor)` cuando la clave existe
+  - `Optional.empty()` cuando no existe
+- En el uso:
+  - Mostrar el valor solo si está presente
+- No usar `null` en ningún punto
+
+### 🧠 Aprendes
+
+- Cuándo usar `Optional.of()`
+- Cuándo usar `Optional.empty()`
+- Representar explícitamente “no hay valor”
+- Evitar `NullPointerException` en configuraciones reales
+
+---
+
+# Optional uso
+
+## 🚀 PROYECTO 21 — Validación de sesión de usuario
+
+### (🔹 `isPresent()` → entender por qué NO es la mejor opción)
+
+### 📌 Caso real
+
+En un sistema web, al iniciar una petición se revisa si el usuario tiene una **sesión activa** (token).  
+El token puede venir o no desde el request.
+
+### 🧩 Requisitos
+
+- Recibir un `Optional<String> token`
+- Verificar si el token existe
+- Si existe, imprimir `"Sesión válida"`
+- Si no existe, imprimir `"Sesión no iniciada"`
+
+### 🛠️ Condiciones
+
+- Usar **`isPresent()`**
+- Usar `get()` solo para este ejercicio (sabiendo que **no es lo ideal**)
+- NO usar `ifPresent()` aún
+
+### 🧠 Aprendes
+
+- Qué hace `isPresent()`
+- Por qué **se parece demasiado a `if (x != null)`**
+- Entender **qué problema intenta resolver Optional**
+
+## 🚀 PROYECTO 22 — Envío de notificación por email
+
+### (🔹 `ifPresent(Consumer)`)
+
+### 📌 Caso real
+
+Un sistema debe enviar un email **solo si el usuario tiene correo registrado**.
+
+### 🧩 Requisitos
+
+- Recibir `Optional<String> email`
+- Si el email existe:
+  - Imprimir `"Enviando correo a: <email>"`
+- Si no existe:
+  - No hacer nada
+
+### 🛠️ Condiciones
+
+- Usar **solo `ifPresent(Consumer)`**
+- NO usar `isPresent()`
+- NO usar `get()`
+
+### 🧠 Aprendes
+
+- Uso correcto de `Consumer<T>`
+- Programación **declarativa**
+- Eliminar `if` innecesarios
+- Estilo Java moderno
+
+## 🚀 PROYECTO 23 — Mensaje de bienvenida
+
+### (🔹 `ifPresentOrElse(Consumer, Runnable)`)
+
+### 📌 Caso real
+
+En una aplicación, al entrar al sistema se muestra un saludo:
+
+- Personalizado si el usuario está logueado
+- Genérico si no lo está
+
+### 🧩 Requisitos
+
+- Recibir `Optional<String> nombreUsuario`
+- Si existe:
+  - Mostrar `"Bienvenido <nombre>"`
+- Si NO existe:
+  - Mostrar `"Bienvenido invitado"`
+
+### 🛠️ Condiciones
+
+- Usar **`ifPresentOrElse()`**
+- No usar `if`, `else`, ni `get()`
+
+### 🧠 Aprendes
+
+- Manejar **ambos escenarios** con Optional
+- Uso de `Runnable`
+- Reemplazar `if-else` clásicos
+
+## 🚀 PROYECTO 24 — Nombre visible en el perfil
+
+### (🔹 `orElse()` vs `orElseGet()`)
+
+### 📌 Caso real
+
+Un perfil de usuario muestra un nombre:
+
+- Si el usuario no definió uno → se genera un nombre por defecto (proceso costoso)
+
+### 🧩 Requisitos
+
+- Tener un método `generarNombrePorDefecto()` que imprima algo como `"Generando nombre..."`
+- Mostrar el nombre final del perfil
+
+### 🛠️ Condiciones
+
+- Implementar **dos versiones**:
+  1. Usando `orElse()`
+  2. Usando `orElseGet()`
+- Comparar cuántas veces se ejecuta `generarNombrePorDefecto()`
+
+### 🧠 Aprendes
+
+- Diferencia **CRÍTICA** entre `orElse` y `orElseGet`
+- Cuándo usar `Supplier`
+- Evitar ejecuciones innecesarias (performance backend)
+
+## 🚀 PROYECTO 25 — Obtener usuario por email (Backend real)
+
+### (🔹 `orElseThrow()` + 🔸 Excepción personalizada)
+
+### 📌 Caso real
+
+Un servicio backend busca un usuario por email en la base de datos.  
+Si no existe → es un **error de negocio**.
+
+### 🧩 Requisitos
+
+- Simular un repositorio que retorne `Optional<Usuario>`
+- Crear una excepción personalizada:
+  `class UsuarioNoEncontradoException extends RuntimeException`
+- Lanzar la excepción si el usuario no existe
+
+### 🛠️ Condiciones
+
+- Usar **`orElseThrow(() -> new ...)`**
+- NO usar `if`
+- NO usar `get()`
+
+### 🧠 Aprendes
+
+- Uso profesional de Optional en backend
+- Manejo de errores de negocio
+- Código limpio y expresivo
+- Patrón típico **Service → Repository**
+
+---
