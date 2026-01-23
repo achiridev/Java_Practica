@@ -1,0 +1,168 @@
+# Jerarquía de Excepciones
+
+## 🚀 PROYECTO 1 — Sistema de monitoreo de fallos en una aplicación bancaria
+
+### (Jerarquía `Throwable → Error vs Exception`)
+
+### 📌 Caso real
+
+Estás trabajando en un **sistema bancario**.  
+Tu equipo quiere un módulo que registre **fallos críticos del sistema** y **errores recuperables de la aplicación** para debugging.
+
+### 🧩 Requisitos
+
+- Crear una clase `MonitorErroresBancarios`
+- Simular:
+  - Un error crítico del sistema (`OutOfMemoryError`)
+  - Un error de la aplicación (`NullPointerException`)
+- Imprimir:
+  - El nombre de la excepción
+  - Si es `Error` o `Exception`
+  - Si hereda de `Throwable`
+
+### 🛠️ Condiciones
+
+- Usar `instanceof Throwable`, `instanceof Error`, `instanceof Exception`
+- NO capturar `Error` con `try-catch` (solo simular con un método que lo lance)
+- Capturar la `Exception` con `try-catch`
+
+### 🧠 Aprendes
+
+- Jerarquía real de excepciones
+- Diferencia entre fallos **de la JVM** y fallos **del software**
+- Por qué `Error` no se maneja normalmente en aplicaciones
+
+## 🚀 PROYECTO 2 — Sistema de login corporativo (Checked Exception simulada)
+
+### (🔸 Checked Exceptions obligatorias SIN archivos)
+
+### 📌 Caso real
+
+Estás creando un **sistema corporativo de login interno**.  
+Si el servidor de autenticación está caído, debes **notificar al sistema superior**.
+
+### 🧩 Requisitos
+
+- Crear una excepción checked personalizada:
+  `class ServidorAutenticacionException extends Exception {}`
+- Crear método:
+  `public void autenticarUsuario(String user, String pass) throws ServidorAutenticacionException`
+- Simular que el servidor falla lanzando la excepción
+
+### 🛠️ Condiciones
+
+- El método que llama a `autenticarUsuario` DEBE:
+  - Capturar la excepción con `try-catch`
+  - O declararla con `throws`
+- Crear un flujo con:
+  - `loginController()` → `authService()` → `autenticarUsuario()`
+
+### 🧠 Aprendes
+
+- Qué es una Checked Exception sin usar archivos
+- Cómo se propaga una excepción entre capas
+- Por qué Java obliga a manejar errores externos
+
+## 🚀 PROYECTO 3 — Validación de datos en registro de usuarios
+
+### (🔸 Unchecked Exceptions / RuntimeException)
+
+### 📌 Caso real
+
+Estás desarrollando un **sistema de registro de usuarios** para una app.  
+El backend confía en que los desarrolladores frontend envíen datos correctos.
+
+### 🧩 Requisitos
+
+- Crear una clase `UsuarioService`
+- Método:
+    `public void registrarUsuario(String nombre, int edad)`
+- Si la edad es menor que 0 o mayor que 150, lanzar `IllegalArgumentException`
+
+### 🛠️ Condiciones
+
+- Lanzar la excepción manualmente con `throw`
+- NO usar `throws`
+- NO usar `try-catch` obligatorio
+
+### 🧠 Aprendes
+
+- Qué son RuntimeExceptions
+- Errores de lógica del programador
+- Por qué Java no obliga a capturarlos
+
+## 🚀 PROYECTO 4 — Microservicio de pagos (RuntimeException vs Exception)
+
+### (Decidir qué tipo de excepción usar)
+
+### 📌 Caso real
+
+Estás creando un **microservicio de pagos (como Stripe o MercadoPago)**.  
+Hay dos tipos de errores:
+
+1. Error del programador (monto inválido)
+2. Error externo (fallo en sistema de pagos externo)
+
+### 🧩 Requisitos
+
+- Crear método:
+  `public void validarMonto(double monto)`
+  - Si monto < 0 → lanzar `IllegalArgumentException` (Runtime)
+- Crear método:
+  `public void conectarPasarelaPago() throws PasarelaPagoException`
+  - Simular fallo lanzando una Checked Exception personalizada
+- Crear método:
+  `public void procesarPago(double monto)`
+  - Llamar a ambos métodos
+
+### 🛠️ Condiciones
+
+- `validarMonto` NO debe declarar `throws`
+- `conectarPasarelaPago` SÍ debe declarar `throws`
+- `procesarPago` debe capturar la excepción externa con `try-catch`
+
+### 🧠 Aprendes
+
+- Responsabilidad del error
+- Diseño profesional de APIs
+- Diferencia REAL entre Checked vs Runtime
+- Arquitectura backend (validación → infraestructura)
+
+---
+
+# Crear tus propias excepciones
+
+## 🚀 PROYECTO 5 — Sistema de usuarios en una plataforma educativa
+
+### (Excepción personalizada con significado de negocio)
+
+### 📌 Caso real
+
+Estás desarrollando el backend de una **plataforma educativa tipo Coursera o Platzi**.  
+Cuando un profesor intenta acceder a los datos de un alumno por ID, el sistema debe lanzar un error claro si el alumno no existe.
+
+El equipo quiere **evitar RuntimeException genéricas** y usar excepciones con **significado de negocio**.
+
+### 🧩 Requisitos
+
+- Crear una excepción personalizada:
+    `class AlumnoNoEncontradoException extends RuntimeException`
+- Crear un servicio:
+    `public Alumno obtenerAlumnoPorId(int id)`
+- Si el alumno no existe → lanzar `AlumnoNoEncontradoException(id)`
+- Simular una lista interna de alumnos (sin base de datos)
+
+### 🛠️ Condiciones
+
+- La excepción debe tener:
+  - Un constructor con mensaje
+  - Un constructor que reciba el `id` y genere el mensaje automáticamente
+- El método NO debe retornar `null`
+- Debe usar `throw new AlumnoNoEncontradoException(...)`
+
+### 🧠 Aprendes
+
+- Por qué usar excepciones personalizadas en lugar de `RuntimeException`
+- Cómo dar **significado de negocio** a los errores
+- Evitar `null` como señal de error
+- Diseño típico de servicios backend
