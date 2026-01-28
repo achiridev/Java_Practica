@@ -322,3 +322,87 @@ Cuando el usuario inicia la app, el sistema debe:
 - Gestión de archivos por usuario
 - Persistencia simple sin base de datos
 - Buenas prácticas de rutas multiplataforma
+
+## 🚀 PROYECTO 10 — Sistema de historial y rotación de logs de una aplicación backend
+
+### (NIO.2 completo + Streams + lógica real de sistema)
+
+### 📌 Caso real
+
+Estás desarrollando un **microservicio backend** que genera logs de actividad de usuarios.  
+Por políticas de la empresa:
+
+- Los logs no pueden crecer infinitamente
+- Cuando el archivo supera cierto tamaño (simulado por número de líneas), se debe:
+    1. Crear un backup del log
+    2. Limpiar el log principal
+    3. Registrar que se hizo una rotación
+
+Este patrón se llama **log rotation** y es usado en Linux, servidores web, Docker, etc.
+
+### 🧩 Requisitos
+
+- Crear un archivo `logs/app.log` con varias líneas (simula actividad)
+- Leer el archivo con `Files.lines()`
+- Contar el número de líneas
+- Si las líneas son mayores a 5:
+  - Copiar el archivo a `logs/backup/app_<timestamp>.log` usando `Files.copy()`
+  - Vaciar el archivo original con `Files.writeString()` (contenido vacío)
+- Mostrar mensajes como:
+  - `"Rotación de logs completada"`
+  - `"No es necesario rotar logs"`
+
+### 🛠️ Condiciones
+
+- Usar rutas con:
+
+```
+  Path logPath = Paths.get("logs", "app.log");
+  Path backupPath = Paths.get("logs", "backup", "app_" + System.currentTimeMillis() + ".log");
+```
+
+- Usar:
+  - `Files.exists()`
+  - `Files.readString()` o `Files.lines()`
+  - `Files.copy()`
+  - `Files.writeString()`
+- No usar `java.io.File`
+- No usar librerías externas
+- Crear manualmente las carpetas `logs/` y `logs/backup/` (o documentarlo)
+
+### 🧠 Aprendes
+
+- Log rotation (concepto real de sistemas operativos y backend)
+- Automatización de mantenimiento de archivos
+- Uso combinado de NIO.2 + Streams
+- Manejo de timestamps en rutas
+- Diseño de tareas de infraestructura (muy valorado en empresas)
+
+### 🔹 Extra 1: Servicio dedicado
+
+Crear una clase:
+
+`class LogRotationService`
+
+con métodos:
+
+- `void escribirLog(String mensaje)`
+- `void rotarSiEsNecesario()`
+
+### 🔹 Extra 2: Configuración externa
+
+Guardar el límite de líneas en un archivo:
+
+`config/log_config.txt MAX_LINES=5`
+
+Leerlo con `Files.readString()`.
+
+### 🔹 Extra 3: Excepciones personalizadas
+
+Crear:
+
+`class LogRotationException extends RuntimeException`
+
+y lanzar si falla la copia del archivo.
+
+---
