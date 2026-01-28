@@ -166,3 +166,159 @@ El equipo quiere **evitar RuntimeException genéricas** y usar excepciones con *
 - Cómo dar **significado de negocio** a los errores
 - Evitar `null` como señal de error
 - Diseño típico de servicios backend
+
+---
+
+# IO y NIO.2
+
+## 🚀 PROYECTO 6 — Gestor de configuración de una aplicación backend
+
+### (Path, Paths, Files.readString(), Files.writeString(), Files.exists())
+
+### 📌 Caso real
+
+Estás desarrollando un **backend de una aplicación web**.  
+El sistema guarda su configuración en un archivo de texto (`config.txt`), por ejemplo:
+
+```
+db.url=localhost
+db.user=admin
+db.password=1234
+```
+
+Si el archivo no existe, el sistema debe crear uno con valores por defecto.
+
+### 🧩 Requisitos
+
+- Crear un archivo `config.txt` usando `Files.writeString()`
+- Verificar si el archivo existe con `Files.exists()`
+- Si existe, leerlo con `Files.readString()`
+- Imprimir el contenido de la configuración en consola
+
+### 🛠️ Condiciones
+
+- Usar `Path` y `Paths.get("config.txt")`
+- NO usar `File` ni `FileReader`
+- Si no existe el archivo, crear uno con configuración por defecto
+
+### 🧠 Aprendes
+
+- Cómo trabajar con archivos modernos en Java
+- Diferencia entre `Path` y `String`
+- Lectura y escritura simple de archivos
+- Uso real de archivos en backend (configuración)
+
+## 🚀 PROYECTO 7 — Analizador de logs de una aplicación
+
+### (Files.lines() + Streams)
+
+### 📌 Caso real
+
+Estás trabajando en un **sistema que genera logs** como:
+
+```
+INFO Usuario conectado
+ERROR Fallo en base de datos
+INFO Usuario desconectado
+ERROR Timeout en servidor
+```
+
+Tu tarea es crear un **analizador de logs** que cuente cuántos errores existen.
+
+### 🧩 Requisitos
+
+- Crear un archivo `app.log` con varias líneas (usando `Files.writeString`)
+- Leer el archivo usando `Files.lines()`
+- Contar cuántas líneas contienen `"ERROR"`
+- Imprimir el número total de errores
+
+### 🛠️ Condiciones
+
+- `Files.lines()` devuelve un **Stream<String>**, debes usar Stream API (`filter`, `count`)
+- NO leer línea por línea manualmente
+- Usar `Path` y `Paths`
+
+### 🧠 Aprendes
+
+- Integrar **NIO.2 + Streams**
+- Procesamiento moderno de archivos
+- Casos reales de observabilidad y logging
+- Programación funcional en Java
+
+## 🚀 PROYECTO 8 — Sistema de respaldo (backup) de archivos
+
+### (Files.copy())
+
+### 📌 Caso real
+
+En una empresa, antes de actualizar una aplicación, se hace un **backup automático** del archivo de datos.  
+Tu tarea es copiar un archivo de datos a una carpeta de respaldo.
+
+### 🧩 Requisitos
+
+- Crear un archivo `datos.txt` con contenido de prueba
+- Copiarlo a `backup/datos_backup.txt` usando `Files.copy()`
+- Verificar si el archivo original existe antes de copiarlo
+- Mostrar un mensaje `"Backup completado"`
+
+### 🛠️ Condiciones
+
+- Usar `Path origen = Paths.get("datos.txt")`
+- Usar `Path destino = Paths.get("backup/datos_backup.txt")`
+- Crear la carpeta `backup` manualmente o desde el sistema operativo
+- NO usar librerías externas ni `File`
+
+### 🧠 Aprendes
+
+- Copia de archivos con NIO.2
+- Automatización de backups (muy real en backend)
+- Manejo de rutas multiplataforma
+- Operaciones críticas de sistemas
+
+## 🚀 PROYECTO 9 — Gestor de perfiles de usuario en una aplicación de escritorio
+
+### (Path, Files.readString, Files.writeString, Files.exists, diseño real)
+
+### 📌 Caso real
+
+Estás desarrollando una **aplicación de escritorio tipo launcher (Minecraft Launcher, Steam, etc.)**.  
+Cada usuario tiene un archivo de perfil guardado en disco, por ejemplo:
+
+`perfiles/daniel.profile`
+
+Contenido del archivo:
+
+```
+nombre=Daniel
+tema=dark
+idioma=es
+```
+
+Cuando el usuario inicia la app, el sistema debe:
+
+- Leer su perfil si existe
+- Crear uno por defecto si no existe
+
+### 🧩 Requisitos
+
+- Crear una carpeta `perfiles/`
+- Recibir un nombre de usuario (ej. `"daniel"`)
+- Construir dinámicamente la ruta del archivo con `Paths.get("perfiles", usuario + ".profile")`
+- Si el archivo no existe:
+  - Crearlo con configuración por defecto usando `Files.writeString()`
+- Si existe:
+  - Leerlo con `Files.readString()` y mostrarlo
+
+### 🛠️ Condiciones
+
+- Usar `Path` para todas las rutas
+- Usar `Files.exists()` antes de leer
+- No usar rutas hardcodeadas tipo `"C:/..."`
+- Simular múltiples usuarios llamando al método con diferentes nombres
+
+### 🧠 Aprendes
+
+- Rutas dinámicas (muy real en apps)
+- Gestión de archivos por usuario
+- Persistencia simple sin base de datos
+- Buenas prácticas de rutas multiplataforma

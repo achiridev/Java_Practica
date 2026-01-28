@@ -1,0 +1,4 @@
+INFO Usuario conectado
+ERROR Fallo en base de datos
+INFO Usuario desconectado
+ERROR Timeout en servidor
