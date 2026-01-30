@@ -212,3 +212,161 @@ El servidor solo permite **2 envíos simultáneos** para no saturar APIs externa
 - Control real de paralelismo (como en microservicios)
 - Diferencia entre ForkJoinPool y tu pool
 - Backpressure manual
+
+---
+
+# Fecha y Hora
+
+## 🚀 PROYECTO 7 — Sistema de suscripciones con auditoría y expiración automática
+
+👉 Nivel: **Intermedio → Semi-Senior**
+
+### 📌 Caso real
+
+Una plataforma SaaS (tipo Netflix o GitHub) gestiona suscripciones mensuales y necesita:
+
+- Saber cuándo expira cada suscripción
+- Calcular la edad del cliente
+- Registrar el momento exacto del pago (timestamp real del servidor)
+- Mostrar fechas en formato amigable
+
+### 🧩 Requisitos
+
+1. Crear clase `Suscripcion` con:
+    - `String usuario`
+    - `LocalDate fechaInicio`
+    - `LocalDate fechaVencimiento`
+    - `Instant timestampPago`
+    - `LocalDate fechaNacimientoCliente`
+2. Calcular:
+    - Fecha de vencimiento = fechaInicio + 30 días
+    - Edad del cliente usando `Period`
+    - Si la suscripción está vencida
+    - Días restantes hasta vencimiento
+3. Formatear fechas en:
+    - `"dd/MM/yyyy"` para mostrar al usuario.
+
+### 🛠️ Condiciones
+
+- Usar:
+  - `Period.between()` para edad
+  - `LocalDate.plusDays()`
+  - `Instant.now()` para registrar pago
+  - `DateTimeFormatter` para mostrar fechas
+- Convertir `Instant → LocalDateTime`
+- Mostrar reporte:
+
+```
+Usuario: Juan
+Edad: 25 años
+Inicio: 10/01/2026
+Vence: 09/02/2026
+Pago registrado en: 2026-01-29T15:22:10Z
+Estado: ACTIVA
+Días restantes: 12
+```
+
+### 🧠 Aprendes
+
+- Timestamp real de servidor (logs, pagos, auditoría)
+- Cálculo de edad (uso real de Period)
+- Formateo profesional de fechas
+- Conversión entre Instant y LocalDateTime
+
+## 🚀 PROYECTO 8 — Sistema avanzado de control de asistencia con métricas
+
+👉 Nivel: **Intermedio Alto**
+
+### 📌 Caso real
+
+Una empresa registra entrada/salida de empleados y necesita:
+
+- Horas trabajadas
+- Horas extra
+- Tiempo total en minutos
+- Timestamp exacto del registro (para auditoría)
+- Reporte formateado
+
+### 🧩 Requisitos
+
+1. Crear clase `RegistroAsistencia` con:
+    - `String empleado`
+    - `LocalDate fecha`
+    - `LocalTime horaEntrada`
+    - `LocalTime horaSalida`
+    - `Instant timestampRegistro`
+2. Calcular:
+    - Horas trabajadas con `Duration`
+    - Horas extra (> 8h)
+    - Si llegó tarde (después de 09:00)
+    - Tiempo total en minutos
+3. Mostrar reporte formateado con `DateTimeFormatter`.
+
+### 🛠️ Condiciones
+
+- Convertir `LocalDate + LocalTime → LocalDateTime`
+- Usar:
+  - `Duration.between()`
+  - `LocalTime.isAfter()`
+  - `DateTimeFormatter "dd-MM-yyyy HH:mm"`
+- Mostrar:
+
+```
+Empleado: Maria
+Fecha: 29-01-2026
+Entrada: 09:15
+Salida: 18:45
+Horas trabajadas: 9h 30m
+Horas extra: 1h 30m
+Registro timestamp: 2026-01-29T14:22:10Z
+```
+
+### 🧠 Aprendes
+
+- Duration real (muy usado en logs, métricas)
+- Cálculo de tiempo laboral
+- Auditoría con Instant
+- Formatos profesionales de fecha/hora
+
+## 🚀 PROYECTO 9 — Motor global de reservas con UTC y conversión de zonas
+
+👉 Nivel: **Avanzado (muy usado en empresas reales)**
+
+### 📌 Caso real
+
+Un sistema global de reservas (tipo Booking o Google Calendar) guarda eventos en UTC pero muestra la hora local al usuario.
+
+### 🧩 Requisitos
+
+1. El usuario ingresa una fecha como texto:
+    - `"29/01/2026 10:00"`
+2. Parsear a `LocalDateTime`.
+3. Convertir a `ZonedDateTime` en zona del usuario (`America/Lima`).
+4. Convertir a `Instant` para guardar en base de datos.
+5. Mostrar el evento en:
+    - Perú
+    - New York
+    - Tokio
+
+### 🛠️ Condiciones
+
+- Usar:
+  - `DateTimeFormatter.parse()`
+  - `ZonedDateTime.of()`
+  - `Instant`
+  - `withZoneSameInstant()`
+- Mostrar:
+
+```
+Evento original (Perú): 29/01/2026 10:00
+Evento UTC timestamp: 2026-01-29T15:00:00Z
+New York: 29/01/2026 10:00
+Tokio: 30/01/2026 00:00
+```
+
+### 🧠 Aprendes
+
+- Conversión real de zonas horarias
+- Cómo funcionan Google Calendar, Zoom, Booking
+- Guardar en UTC (estándar mundial)
+- Parseo de input de usuario (muy backend)
