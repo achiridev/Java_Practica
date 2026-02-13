@@ -139,3 +139,186 @@ List<Orden> buscarOrdenes(
 - Conversión Java Time → SQL
 - Mapeo complejo de ResultSet
 - Base para repositorios tipo DAO / Repository
+
+# Transacciones
+
+## 🚀 PROYECTO 4 — Transferencia bancaria con garantía ACID
+
+👉 Nivel: **Intermedio–Avanzado**
+
+### 📌 Caso real
+
+Un sistema bancario permite transferir dinero entre cuentas.  
+La operación debe cumplir ACID:
+
+- No puede perder dinero.
+- No puede duplicar dinero.
+- Si algo falla, TODO debe revertirse.
+
+### 🧩 Requisitos
+
+Tabla `cuentas`:
+
+```
+id INT PRIMARY KEY
+titular VARCHAR(100)
+saldo DECIMAL(10,2)
+```
+
+Implementar método:
+
+`void transferir(int cuentaOrigenId, int cuentaDestinoId, double monto)`
+
+La transferencia debe:
+
+1. Verificar que la cuenta origen tenga saldo suficiente.
+2. Restar saldo a cuenta origen.
+3. Sumar saldo a cuenta destino.
+4. Confirmar cambios.
+
+### 🛠️ Condiciones
+
+- Desactivar auto-commit:
+
+`connection.setAutoCommit(false);`
+
+- Usar:
+  - `SELECT ... FOR UPDATE` (si tu BD lo soporta)
+  - `executeQuery()` para leer saldo
+  - `executeUpdate()` para actualizar
+- Si ocurre cualquier error:
+
+`connection.rollback();`
+- Si todo sale bien:
+
+`connection.commit();`
+
+- Manejar correctamente:
+  - SQLException
+  - Saldo insuficiente
+
+### 🧠 Aprendes
+
+- Atomicidad real
+- Por qué no se debe usar auto-commit en operaciones críticas
+- Cómo evitar inconsistencias
+- Fundamentos de sistemas bancarios
+
+## 🚀 PROYECTO 5 — Creación de pedido con múltiples inserts dependientes
+
+👉 Nivel: **Avanzado**
+
+### 📌 Caso real
+
+Un e-commerce crea un pedido que incluye:
+
+- Insertar orden en tabla `ordenes`
+- Insertar múltiples registros en `orden_items`
+- Actualizar stock en `productos`
+
+Si falla cualquier paso, TODO debe revertirse.
+
+### 🧩 Requisitos
+
+Tablas:
+
+```
+ordenes (id, usuario, total, fecha)
+orden_items (id, orden_id, producto_id, cantidad, precio)
+productos (id, nombre, stock, precio)
+```
+
+Implementar método:
+
+`void crearOrden(String usuario, List<ItemDTO> items)`
+
+Debe:
+
+1. Insertar la orden.
+2. Obtener ID generado.
+3. Insertar cada item.
+4. Descontar stock.
+5. Confirmar transacción.
+
+### 🛠️ Condiciones
+
+- Usar:
+
+`connection.setAutoCommit(false);`
+
+- Usar:
+  - `PreparedStatement.RETURN_GENERATED_KEYS`
+- Si un producto no tiene stock suficiente:
+  - Lanzar excepción
+  - Ejecutar rollback
+- Si todo es correcto:
+  - Ejecutar commit
+
+### 🧠 Aprendes
+
+- Transacciones con múltiples tablas
+- Integridad referencial
+- Uso de claves generadas
+- Cómo funcionan los sistemas de compra reales
+
+## 🚀 PROYECTO 6 — Sistema de reserva con control de concurrencia
+
+👉 Nivel: **Muy Avanzado (Junior fuerte / Semi Senior)**
+
+### 📌 Caso real
+
+Un sistema de reservas de hotel permite reservar habitaciones.
+
+Problema:  
+Dos usuarios pueden intentar reservar la misma habitación al mismo tiempo.
+
+Debes evitar:
+
+- Doble reserva
+- Inconsistencias
+- Condiciones de carrera
+
+### 🧩 Requisitos
+
+Tabla:
+
+```
+habitaciones (id, numero, disponible BOOLEAN)
+reservas (id, habitacion_id, usuario, fecha)
+```
+
+Implementar método:
+
+`void reservarHabitacion(int habitacionId, String usuario)`
+
+Debe:
+
+1. Verificar si la habitación está disponible.
+2. Marcarla como no disponible.
+3. Insertar reserva.
+4. Confirmar.
+
+### 🛠️ Condiciones
+
+- Desactivar auto-commit.
+- Usar:
+
+`SELECT ... FOR UPDATE`
+
+para bloquear la fila.
+
+- Simular concurrencia (opcional pero recomendado).
+- Si la habitación ya está reservada:
+  - Lanzar excepción
+  - Hacer rollback
+- Confirmar solo si todo es correcto.
+
+### 🧠 Aprendes
+
+- Control de concurrencia real
+- Bloqueo de filas
+- Problemas tipo race condition
+- Aislamiento de transacciones
+- Base para sistemas tipo Booking
+
+---
