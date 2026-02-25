@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="com.achiridev.proyecto01.CuentaBancariaServiceTest" time="0.181" tests="3" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="com.achiridev.proyecto03.UsuarioServiceTest" time="0.787" tests="2" errors="1" skipped="0" failures="1">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -55,12 +55,32 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="69.0"/>
   </properties>
-  <testcase name="testMontoNegativo" classname="com.achiridev.proyecto01.CuentaBancariaServiceTest" time="0.137">
-    <system-err><![CDATA[SLF4J: No SLF4J providers were found.
-SLF4J: Defaulting to no-operation (NOP) logger implementation
-SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+  <testcase name="testCreacionUsuarioExitosa" classname="com.achiridev.proyecto03.UsuarioServiceTest" time="0.778">
+    <error message="Usuario ya existe" type="com.achiridev.ServiceException"><![CDATA[com.achiridev.ServiceException: Usuario ya existe
+	at com.achiridev.proyecto03.UsuarioService.lambda$crearUsuario$0(UsuarioService.java:14)
+	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
+	at com.achiridev.proyecto03.UsuarioService.crearUsuario(UsuarioService.java:13)
+	at com.achiridev.proyecto03.UsuarioServiceTest.testCreacionUsuarioExitosa(UsuarioServiceTest.java:34)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+]]></error>
+    <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (/home/achiri/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.12/byte-buddy-agent-1.14.12.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
 ]]></system-err>
   </testcase>
-  <testcase name="testTransferenciaExitosa" classname="com.achiridev.proyecto01.CuentaBancariaServiceTest" time="0.025"/>
-  <testcase name="testSaldoInsuficiente" classname="com.achiridev.proyecto01.CuentaBancariaServiceTest" time="0.015"/>
+  <testcase name="testCreacionUsuarioFallida" classname="com.achiridev.proyecto03.UsuarioServiceTest" time="0.005">
+    <failure message="Expected com.achiridev.ServiceException to be thrown, but nothing was thrown." type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: Expected com.achiridev.ServiceException to be thrown, but nothing was thrown.
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:73)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3128)
+	at com.achiridev.proyecto03.UsuarioServiceTest.testCreacionUsuarioFallida(UsuarioServiceTest.java:47)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+]]></failure>
+  </testcase>
 </testsuite>
