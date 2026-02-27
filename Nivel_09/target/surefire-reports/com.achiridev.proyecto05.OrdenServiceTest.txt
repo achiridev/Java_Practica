@@ -1,0 +1,17 @@
+-------------------------------------------------------------------------------
+Test set: com.achiridev.proyecto05.OrdenServiceTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.114 s <<< FAILURE! -- in com.achiridev.proyecto05.OrdenServiceTest
+com.achiridev.proyecto05.OrdenServiceTest.testProductoNoExiste -- Time elapsed: 0.096 s <<< FAILURE!
+Wanted but not invoked:
+notificacionService.enviarConfirmacion(
+    <any>
+);
+-> at com.achiridev.proyecto05.OrdenServiceTest.testProductoNoExiste(OrdenServiceTest.java:64)
+Actually, there were zero interactions with this mock.
+
+	at com.achiridev.proyecto05.OrdenServiceTest.testProductoNoExiste(OrdenServiceTest.java:64)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="com.achiridev.proyecto03.UsuarioServiceTest" time="0.036" tests="2" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="com.achiridev.proyecto05.OrdenServiceTest" time="0.114" tests="3" errors="0" skipped="0" failures="1">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -55,6 +55,20 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="69.0"/>
   </properties>
-  <testcase name="testCreacionUsuarioExitosa" classname="com.achiridev.proyecto03.UsuarioServiceTest" time="0.03"/>
-  <testcase name="testCreacionUsuarioFallida" classname="com.achiridev.proyecto03.UsuarioServiceTest" time="0.003"/>
+  <testcase name="testProductoNoExiste" classname="com.achiridev.proyecto05.OrdenServiceTest" time="0.096">
+    <failure message="&#10;Wanted but not invoked:&#10;notificacionService.enviarConfirmacion(&#10;    &lt;any&gt;&#10;);&#10;-&gt; at com.achiridev.proyecto05.OrdenServiceTest.testProductoNoExiste(OrdenServiceTest.java:64)&#10;Actually, there were zero interactions with this mock.&#10;" type="Wanted but not invoked"><![CDATA[Wanted but not invoked:
+notificacionService.enviarConfirmacion(
+    <any>
+);
+-> at com.achiridev.proyecto05.OrdenServiceTest.testProductoNoExiste(OrdenServiceTest.java:64)
+Actually, there were zero interactions with this mock.
+
+	at com.achiridev.proyecto05.OrdenServiceTest.testProductoNoExiste(OrdenServiceTest.java:64)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+]]></failure>
+  </testcase>
+  <testcase name="testCreacionExitosa" classname="com.achiridev.proyecto05.OrdenServiceTest" time="0.006"/>
+  <testcase name="testStockInsuficiente" classname="com.achiridev.proyecto05.OrdenServiceTest" time="0.006"/>
 </testsuite>

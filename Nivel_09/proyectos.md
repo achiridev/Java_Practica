@@ -226,3 +226,171 @@ UsuarioService service;
 - Verificar que un método NO se llama
 - Diferencia entre validar resultado y validar interacción
 - Testing de reglas de negocio
+
+## 🚀 PROYECTO 4 — Servicio de pagos con manejo de errores externos
+
+👉 Nivel: **Intermedio–Alto**
+
+### 📌 Caso real
+
+Un `PagoService` depende de:
+
+- `PagoRepository`
+- `BancoClient` (servicio externo)
+
+Flujo:
+
+1. Validar saldo con BancoClient.
+2. Si saldo suficiente → guardar pago.
+3. Si Banco falla → lanzar excepción.
+4. Si saldo insuficiente → no guardar.
+
+### 🧩 Requisitos
+
+Interfaces:
+
+```java
+interface BancoClient {  
+    boolean tieneSaldo(String cuenta, double monto);  
+}
+
+interface PagoRepository {  
+    void guardar(Pago pago);  
+}
+```
+
+Clase:
+
+```java
+class PagoService {  
+    private BancoClient bancoClient;  
+    private PagoRepository repository;  
+  
+    public void procesarPago(String cuenta, double monto) {  
+        // implementar lógica  
+    }  
+}
+```
+
+### 🛠️ Condiciones
+
+Tu test debe cubrir:
+
+### 1️⃣ Pago exitoso
+
+- `when(bancoClient.tieneSaldo(...)).thenReturn(true);`
+- Verificar:
+    - `verify(repository, times(1)).guardar(...)`
+
+### 2️⃣ Saldo insuficiente
+
+- `thenReturn(false)`
+- Verificar:
+    - `assertThrows`
+    - `verify(repository, never()).guardar(...)`
+
+### 3️⃣ Error del banco
+
+- `when(...).thenThrow(new RuntimeException("Error banco"));`
+- Verificar:
+    - `assertThrows`
+    - `verify(repository, never()).guardar(...)`
+
+### 🧠 Aprendes
+
+- Simular dependencias externas
+- Uso real de `thenThrow`
+- Asegurar que no se ejecuten efectos secundarios
+- Testing de servicios con múltiples dependencias
+
+## 🚀 PROYECTO 5 — Servicio de órdenes con múltiples interacciones y validación estricta
+
+👉 Nivel: **Avanzado (nivel prueba técnica real)**
+
+### 📌 Caso real
+
+Un `OrdenService` depende de:
+
+- `ProductoRepository`
+- `OrdenRepository`
+- `NotificacionService`
+
+Flujo:
+
+1. Buscar producto.
+2. Verificar stock.
+3. Descontar stock.
+4. Guardar orden.
+5. Enviar notificación.
+
+Si falla cualquier paso:
+
+- No debe guardar orden.
+- No debe enviar notificación.
+
+### 🧩 Requisitos
+
+Interfaces:
+```java
+interface ProductoRepository {  
+    Optional<Producto> buscarPorId(Long id);  
+    void actualizarStock(Long id, int nuevoStock);  
+}
+
+interface OrdenRepository {  
+    Orden guardar(Orden orden);  
+}
+
+interface NotificacionService {  
+    void enviarConfirmacion(String usuario);  
+}
+```
+
+Clase:
+
+```java
+class OrdenService {  
+    // dependencias  
+    public Orden crearOrden(Long productoId, String usuario, int cantidad) {  
+        // implementar  
+    }  
+}
+```
+
+### 🛠️ Condiciones
+
+Tu test debe incluir:
+
+### ✅ Caso exitoso
+
+- Stub:
+    - producto encontrado
+    - stock suficiente
+- Verificar:
+    - `verify(productoRepository).actualizarStock(...)`
+    - `verify(ordenRepository).guardar(...)`
+    - `verify(notificacionService).enviarConfirmacion(...)`
+- Usar `assertNotNull`
+
+### ❌ Producto no existe
+
+- `thenReturn(Optional.empty())`
+- Verificar:
+    - `assertThrows`
+    - `verify(ordenRepository, never()).guardar(...)`
+    - `verify(notificacionService, never()).enviarConfirmacion(...)`
+
+### ❌ Stock insuficiente
+
+- Producto existe pero stock bajo
+- Verificar que:
+    - No se guarda orden
+    - No se envía notificación
+
+### 🧠 Aprendes
+
+- Testing de múltiples dependencias
+- Validación estricta de interacciones
+- Verificación de orden de llamadas
+- Pensar en efectos secundarios
+- Diferencia profunda entre Assert vs Verify

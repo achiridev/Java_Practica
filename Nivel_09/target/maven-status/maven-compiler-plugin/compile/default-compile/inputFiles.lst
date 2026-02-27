@@ -11,3 +11,13 @@
 /home/achiri/1-Proyectos_Achiri/Java_practica/Nivel_09/src/main/java/com/achiridev/proyecto03/Usuario.java
 /home/achiri/1-Proyectos_Achiri/Java_practica/Nivel_09/src/main/java/com/achiridev/proyecto03/UsuarioRepository.java
 /home/achiri/1-Proyectos_Achiri/Java_practica/Nivel_09/src/main/java/com/achiridev/proyecto03/UsuarioService.java
+/home/achiri/1-Proyectos_Achiri/Java_practica/Nivel_09/src/main/java/com/achiridev/proyecto04/BancoClient.java
+/home/achiri/1-Proyectos_Achiri/Java_practica/Nivel_09/src/main/java/com/achiridev/proyecto04/Pago.java
+/home/achiri/1-Proyectos_Achiri/Java_practica/Nivel_09/src/main/java/com/achiridev/proyecto04/PagoRepository.java
+/home/achiri/1-Proyectos_Achiri/Java_practica/Nivel_09/src/main/java/com/achiridev/proyecto04/PagoService.java
+/home/achiri/1-Proyectos_Achiri/Java_practica/Nivel_09/src/main/java/com/achiridev/proyecto05/Model/Orden.java
+/home/achiri/1-Proyectos_Achiri/Java_practica/Nivel_09/src/main/java/com/achiridev/proyecto05/Model/Producto.java
+/home/achiri/1-Proyectos_Achiri/Java_practica/Nivel_09/src/main/java/com/achiridev/proyecto05/Repository/OrdenRepository.java
+/home/achiri/1-Proyectos_Achiri/Java_practica/Nivel_09/src/main/java/com/achiridev/proyecto05/Repository/ProductoRepository.java
+/home/achiri/1-Proyectos_Achiri/Java_practica/Nivel_09/src/main/java/com/achiridev/proyecto05/Service/NotificacionService.java
+/home/achiri/1-Proyectos_Achiri/Java_practica/Nivel_09/src/main/java/com/achiridev/proyecto05/Service/OrdenService.java
