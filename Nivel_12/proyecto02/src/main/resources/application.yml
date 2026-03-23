@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: proyecto02
+
+app:  
+  nombre: "Cliente Clima"
+
+api:
+  clima:
+    timeout: 3000

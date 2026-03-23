@@ -1,0 +1,4 @@
+mi:
+  app:
+    entorno: "PROD"
+    debug: false

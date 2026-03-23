@@ -1,0 +1,4 @@
+mi:
+  app:
+    entorno: "DEV"
+    debug: true

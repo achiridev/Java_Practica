@@ -1,0 +1,3 @@
+api:
+  clima:
+    url: https://api.fake.com
