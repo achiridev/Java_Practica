@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nivel 13 - Proyecto01</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <h1>Nivel 13 - Proyecto01</h1>
+
+    <div class="bloque bloque_post">
+        <div class="subtitulo">Crear Pedido</div>
+        <form>
+            <label>
+                Nombre del Cliente:
+                <input class="inputClientePost" type="text" placeholder="Juan Pérez">
+            </label>
+            <label>
+                Total del Pedido:
+                <input class="inputTotalPost" type="number" step="0.01" placeholder="999.99">
+            </label>
+            <label>
+                Estado del Pedido:
+                <input class="inputEstadoPost" type="text" placeholder="PENDIENTE">
+            </label>
+            <button class="crearPedido">Crear Pedido</button>
+            <div class="mensajeCreacion"></div>
+        </form>
+    </div>
+    <script src="js/crearPedido.js"></script>
+
+
+    <div class="bloque bloque_get">
+        <div class="subtitulo">Obtener pedido por id</div>
+        <form>
+            <label>
+                ID de Pedido:
+                <input class="inputIdGet" type="number" placeholder="1">
+            </label>
+            <button class="buscarPorId">Buscar Pedido</button>
+            <button class="limpiarBusqueda">Limpiar Búsqueda</button>
+        </form>
+        <div class="subtitulo">Obtener pedidos por estado</div>
+        <form>
+            <label>
+                Estado del Pedido:
+                <input class="inputEstadoGet" type="text" placeholder="PENDIENTE">
+            </label>
+            <label>
+                Número de Página:
+                <input class="inputPage" type="number" placeholder="0">
+            </label>
+            <label>
+                Tamaño de Página:
+                <input class="inputSize" type="number" placeholder="5">
+            </label>
+            <button class="buscarPorEstado">Buscar por Estado</button>
+        </form>
+    </div>
+    <div class="bloque">
+        <div class="subtitulo">Pedidos</div>
+        <div class="tarjetas">
+            <div class="targeta_pedido">
+                <h2>Pedido Ejemplo</h2>
+                <p>Cliente: Juan Pérez</p>
+                <p>Total: $999.99</p>
+                <p>Estado: En proceso</p>
+            </div>
+        </div>
+    </div>
+    <script src="js/obtenerPedido.js"></script>
+
+    <div class="bloque bloque_patch">
+        <div class="subtitulo">Editar pedido</div>
+        <form>
+            <label>
+                ID de Pedido:
+                <input class="inputIdPut" type="number" placeholder="1">
+            </label>
+            <label>
+                Nuevo Estado del Pedido:
+                <input class="inputEstadoPut" type="text" placeholder="COMPLETADO">
+            </label>
+            <button class="editarPedido">Editar Pedido</button>
+            <div class="mensajeEdicion"></div>
+        </form>
+    </div>
+    <script src="js/actualizarPedido.js"></script>
+
+    <div class="bloque bloque_delete">
+        <div class="subtitulo">Eliminar pedido</div>
+        <form>
+            <label>
+                ID de Pedido:
+                <input class="inputIdDelete" type="number" placeholder="1">
+            </label>
+            <button class="eliminarPedido">Eliminar Pedido</button>
+            <div class="mensajeEliminacion"></div>
+        </form>
+    </div>
+    <script src="js/eliminarPedido.js"></script>
+
+</body>
+</html>
