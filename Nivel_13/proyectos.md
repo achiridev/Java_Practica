@@ -137,156 +137,172 @@ DELETE /api/pedidos/{id}
 - Buenas prácticas de rutas (`/api/pedidos`)
 - Manejo de estados en sistemas reales
 
-# 🚀 PROYECTO 2 — API de Usuarios con Búsqueda Avanzada
-
-## 📌 Caso real
-
-Una empresa necesita un sistema para gestionar usuarios con búsqueda avanzada.
-
-Se debe poder:
-
-- Crear usuarios
-- Buscar por múltiples filtros
-- Activar/desactivar usuarios
-- Actualizar datos parcialmente
-
-👉 Esto es exactamente lo que hacen sistemas de:
-
-- CRM
-- sistemas administrativos
-- dashboards internos
-
 ---
 
-## 🧩 Requisitos
+## 🚀 PROYECTO 2 — API de Registro y Autenticación de Usuarios
 
-### 🔹 Modelo Usuario
+### 📌 Caso real
 
-{  
-  "id": 1,  
-  "nombre": "Daniel",  
-  "edad": 25,  
-  "activo": true  
-}
+Una aplicación (tipo red social o e-commerce) necesita un sistema de registro de usuarios.
 
----
+Problemas reales que debes resolver:
 
-### 1. Crear usuario
+- Usuarios envían datos inválidos ❌
+- Emails duplicados ❌
+- Errores inconsistentes ❌
 
-POST /api/usuarios
+👉 Necesitas respuestas HTTP correctas + validaciones + errores estructurados.
 
----
+### 🧩 Requisitos
 
-### 2. Buscar usuarios (endpoint clave 🔥)
+#### 🔹 1. Registro de usuario
 
-GET /api/usuarios?nombre=daniel&edad=25&activo=true
-
-Usar:
-
-- `@RequestParam(required = false)`
-- múltiples filtros dinámicos
-
-💡 Debe funcionar aunque envíen solo 1 parámetro
-
----
-
-### 3. Obtener usuario por ID
-
-GET /api/usuarios/{id}
-
----
-
-### 4. Actualizar completamente
-
-PUT /api/usuarios/{id}
-
----
-
-### 5. Actualización parcial (clave 🔥)
-
-PATCH /api/usuarios/{id}
+```http
+POST /api/auth/register
+```
 
 Body:
 
+```JSON
 {  
-  "activo": false  
+  "nombre": "Daniel",  
+  "email": "daniel@gmail.com",  
+  "password": "12345678",  
+  "edad": 25  
 }
+```
 
-👉 Aquí usas `@RequestBody` parcialmente
+✔ Usar:
 
----
+- DTO con:
+  - `@NotBlank`
+  - `@Email`
+  - `@Size`
+  - `@Min`
 
-### 6. Activar/desactivar usuario (endpoint específico)
+✔ Usar:
 
-PATCH /api/usuarios/{id}/estado?activo=false
+- `@Valid`
+- `ResponseEntity`
 
----
+#### 🔹 2. Obtener usuario por ID
 
-### 7. Eliminar usuario
+```http
+GET /api/auth/{id}
+```
 
-DELETE /api/usuarios/{id}
+✔ Si no existe:
 
----
+- lanzar excepción personalizada → manejar con `@RestControllerAdvice`
 
-## 🛠️ Condiciones
+#### 🔹 3. Eliminar usuario
 
-- Usar:
-    - `@RestController`
-    - `@RequestMapping("/api/usuarios")`
-- Manejar:
-    - parámetros opcionales (`required = false`)
-    - valores por defecto
-- Validar:
-    - edad no negativa
-- No usar base de datos (lista en memoria)
+```http
+DELETE /api/auth/{id}
+```
 
-💡 Bonus PRO:
+✔ Respuesta:
 
-- implementar paginación:
+- `204 NO CONTENT`
 
-GET /api/usuarios?page=0&size=10
+#### 🔹 4. Login (simulado)
 
----
+```http
+POST /api/auth/login
+```
 
-## 📤 Posibles salidas
+Body:
 
-### ✔️ Búsqueda flexible
+```JSON
+{  
+  "email": "daniel@gmail.com",  
+  "password": "12345678"  
+}
+```
 
-[  
-  {  
-    "id": 1,  
-    "nombre": "Daniel",  
-    "activo": true  
-  }  
-]
+✔ Si credenciales incorrectas:
 
----
+- `400 BAD REQUEST`
 
-### ✔️ Actualización parcial
+### 🛠️ Condiciones
 
+- ❌ NO devolver objetos directamente → usar `ResponseEntity`
+- ✔ Usar:
+  - `ResponseEntity<Objeto>`
+  - `ResponseEntity<String>`
+  - `ResponseEntity<Void>`
+- ✔ Implementar:
+  - DTOs
+  - Validaciones con `@Valid`
+  - `@RestControllerAdvice`
+- ✔ Crear:
+  - `ErrorResponse` (JSON estructurado)
+- ✔ Manejar excepciones:
+  - Usuario no encontrado → `404`
+  - Email duplicado → `400`
+  - Error general → `500`
+- ✔ Usar headers:
+
+Location: `/api/auth/{id}`
+
+### 📤 Posibles salidas
+
+#### ✔️ Registro exitoso (201)
+
+```JSON
 {  
   "id": 1,  
   "nombre": "Daniel",  
-  "edad": 25,  
-  "activo": false  
+  "email": "daniel@gmail.com"  
 }
+```
 
----
+Headers:
 
-### ❌ Error validación
+```http
+Location: /api/auth/1
+```
 
+#### ❌ Error validación (400)
+
+```JSON
 {  
-  "error": "Edad inválida"  
+  "email": "El email no es válido",  
+  "password": "Debe tener al menos 8 caracteres"  
 }
+```
+
+#### ❌ Usuario no encontrado (404)
+
+```JSON
+{  
+  "status": 404,  
+  "mensaje": "Usuario no encontrado con id: 10",  
+  "timestamp": "2026-03-25T12:00:00"  
+}
+```
+
+#### ❌ Login incorrecto (400)
+
+```JSON
+{  
+  "status": 400,  
+  "mensaje": "Credenciales inválidas"  
+}
+```
+
+### 🧠 Aprendes
+
+- Por qué **NO devolver objetos directamente**
+- Uso real de:
+  - `ResponseEntity`
+  - `HttpStatus`
+- Validación profesional con DTOs
+- Manejo global de errores (`@RestControllerAdvice`)
+- Uso de headers (`Location`)
+- Diferencia entre:
+  - error de negocio (400)
+  - recurso inexistente (404)
+  - error interno (500)
 
 ---
-
-## 🧠 Aprendes
-
-- Búsquedas reales tipo backend profesional
-- Uso avanzado de:
-    - `@RequestParam` opcionales
-- Diferencia entre:
-    - filtros vs rutas
-- `PATCH` real (muy importante en APIs modernas)
-- Diseño limpio de endpoints REST

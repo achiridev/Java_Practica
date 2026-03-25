@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API de Usuarios</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>API de Usuarios</h1>
+            <p>Gestión de usuarios con Spring Boot</p>
+        </header>
+
+        <div class="main-grid">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon login">🔐</div>
+                    <span class="card-title">Iniciar Sesión</span>
+                </div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Correo Electrónico</label>
+                        <input type="email" id="loginEmail" placeholder="usuario@ejemplo.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
+                    </div>
+                    <button type="submit" class="btn btn-purple" id="btnLogin">Iniciar Sesión</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon register">📝</div>
+                    <span class="card-title">Registrar Usuario</span>
+                </div>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="regNombre">Nombre Completo</label>
+                        <input type="text" id="regNombre" placeholder="Juan Pérez" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">Correo Electrónico</label>
+                        <input type="email" id="regEmail" placeholder="usuario@ejemplo.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">Contraseña (8-20 caracteres)</label>
+                        <input type="password" id="regPassword" placeholder="Tu contraseña" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regEdad">Edad (18-100)</label>
+                        <input type="number" id="regEdad" placeholder="25" min="18" max="100" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="btnRegister">Registrar</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon search">🔍</div>
+                    <span class="card-title">Buscar Usuario</span>
+                </div>
+                <form id="searchForm">
+                    <div class="form-group">
+                        <label for="searchId">ID del Usuario</label>
+                        <input type="number" id="searchId" placeholder="1" min="1" required>
+                    </div>
+                    <button type="submit" class="btn btn-cyan" id="btnSearch">Buscar</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon delete">🗑️</div>
+                    <span class="card-title">Eliminar Usuario</span>
+                </div>
+                <form id="deleteForm">
+                    <div class="form-group">
+                        <label for="deleteId">ID del Usuario</label>
+                        <input type="number" id="deleteId" placeholder="1" min="1" required>
+                    </div>
+                    <button type="submit" class="btn btn-red" id="btnDelete">Eliminar</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="result-section">
+            <div class="result-card">
+                <div class="result-header">
+                    <h3>📋 Resultado</h3>
+                    <span class="badge badge-success hidden" id="successBadge">Operación exitosa</span>
+                </div>
+                
+                <div id="resultContent">
+                    <div id="userInfo" class="user-info hidden">
+                        <div class="info-item">
+                            <div class="label">ID</div>
+                            <div class="value" id="userId">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Nombre</div>
+                            <div class="value" id="userNombre">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Correo</div>
+                            <div class="value" id="userEmail">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Edad</div>
+                            <div class="value" id="userEdad">-</div>
+                        </div>
+                    </div>
+                    
+                    <div id="emptyState" class="empty-state">
+                        <div class="icon">📭</div>
+                        <p>No hay datos para mostrar. Realiza una operación para ver los resultados.</p>
+                    </div>
+                </div>
+                
+                <div id="errorDisplay" class="error-display hidden">
+                    <h4>⚠️ Error</h4>
+                    <div class="error-message" id="errorMessage"></div>
+                    <div class="error-details hidden" id="errorDetails"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/register.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/getUser.js"></script>
+    <script src="js/deleteUser.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,182 +1,147 @@
-# AGENTS.md - Code Guidelines
+# ProyectoJava - Repo General
 
-## Repository Overview
+## Project Overview
+- Java 21+, Spring Boot 4.0.4
+- Maven-based project structure
+- Arquitectura: Controller -> Service -> Repository
+- Estructura: Nivel_XX/proyectoYY/
+- Package base: `com.achiridev`
 
-**Java 21** practice repository with Spring Boot projects in `Nivel_12/`.
+## Build & Test Commands
 
-| Project | Spring Boot | Description |
-|---------|-------------|-------------|
-| `Nivel_12/proyecto01/` | 3.2.5 | Configuration API with profiles |
-| `Nivel_12/proyecto02/` | 4.0.4 | External API client with config |
-
-## Build Commands
-
+### Maven Wrapper (./mvnw)
 ```bash
-cd Nivel_12/proyecto01  # or proyecto02
+# Compile
+./mvnw compile
 
-mvn clean compile                    # Compile only
-mvn test                            # Run all tests
-mvn test -Dtest=AppTest             # Run single test class
-mvn test -Dtest=AppTest#methodName  # Run single test method
-mvn test -Dspring.profiles.active=dev
-mvn package                         # Build JAR
-mvn spring-boot:run                 # Run application
-mvn dependency:tree                 # View dependencies
+# Run tests
+./mvnw test
+
+# Run a single test class
+./mvnw test -Dtest=NombreTest
+
+# Run a single test method
+./mvnw test -Dtest=NombreTest#nombreMetodo
+
+# Package (JAR)
+./mvnw package -DskipTests
+
+# Run application
+./mvnw spring-boot:run
+
+# Clean
+./mvnw clean
+
+# Full build
+./mvnw clean package
+
+# Run with Spring profile
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
-## Code Style
+## Code Style Guidelines
 
-- **Java**: 21+ | **Indentation**: 4 spaces | **Encoding**: UTF-8
-- **Braces**: K&R style (same line) | **Line length**: <120 chars
+### General Conventions
+- **Language**: Java 21 (minimum)
+- **Encoding**: UTF-8
+- **Indentation**: 4 spaces (no tabs)
+- **Line Length**: Under 120 characters when practical
+- **Braces**: Opening brace on same line
+- **Comments**: Spanish for user-facing messages, English for code
 
 ### Naming Conventions
-| Element | Convention | Example |
-|---------|------------|---------|
-| Classes | PascalCase | `AppConfig` |
-| Methods | camelCase | `getUserById()` |
-| Variables | camelCase | `userName` |
-| Constants | UPPER_SNAKE | `MAX_RETRIES` |
-| Packages | lowercase | `com.achiridev` |
-| YAML keys | kebab-case | `api-clima` |
+| Element       | Convention       | Example                              |
+|---------------|------------------|--------------------------------------|
+| Classes       | PascalCase       | `UsuarioService`, `ErrorResponse`    |
+| DTOs          | PascalCase + Suffix | `UsuarioRequestDTO`, `UsuarioResponseDTO` |
+| Methods       | camelCase        | `getById()`, `registrar()`, `autenticar()` |
+| Variables     | camelCase        | `usuarioRequestDTO`, `idCounter`     |
+| Constants     | UPPER_SNAKE_CASE | `MAX_RETRY_COUNT`                    |
+| Packages      | lowercase        | `com.achiridev`                     |
+| YAML keys     | kebab-case       | `spring-application`                |
 
-### Import Order
-```java
-import java.time.*;
-import org.springframework.*;
-import com.achiridev.*;
-```
+### Import Organization
+Group imports in this order with blank lines between groups:
+1. `java.*` imports
+2. `jakarta.*` imports (validation)
+3. Third-party imports (`org.springframework.*`)
+4. Project imports (`com.achiridev.*`)
 
 ### Class Structure
-1. Package → 2. Imports → 3. Annotations → 4. Class declaration
-5. Fields (private) → 6. Constructors → 7. Public methods
-8. Private methods → 9. Getters/Setters
+1. Package declaration
+2. Import statements (grouped as above)
+3. Class-level annotations
+4. Class declaration
+5. Private fields
+6. Constructors
+7. Public methods
+8. Private methods
+9. Getters/Setters
 
-## Code Examples
+### Annotation Usage
+| Annotation              | Purpose                              |
+|-------------------------|--------------------------------------|
+| `@SpringBootApplication`| Main application class               |
+| `@RestController`        | REST API controllers                 |
+| `@RequestMapping`        | URL path mapping                     |
+| `@Service`              | Service layer classes                |
+| `@Component`            | Generic Spring-managed beans (mappers)|
+| `@Repository`           | Data access classes                  |
+| `@RestControllerAdvice` | Global exception handling            |
+| `@Valid`                | Input validation on DTOs             |
 
-**Controller**:
-```java
-@RestController
-@RequestMapping("/api")
-public class ClimaController {
-    private final ClimaService climaService;
+### Architecture Patterns
 
-    public ClimaController(ClimaService climaService) {
-        this.climaService = climaService;
-    }
+#### Controller Layer
+- Use `@RestController` with `@RequestMapping`
+- Return `ResponseEntity<?>` with appropriate HTTP status codes
+- Use `@Valid` on DTO parameters
+- Method names in English (e.g., `register`, `getById`, `delete`)
 
-    @GetMapping("/clima")
-    public Clima clima() {
-        return climaService.obtenerClima();
-    }
-}
-```
+#### Service Layer
+- Constructor injection for dependencies
+- Business logic and validation
+- Throws custom exceptions for domain errors
+- Return DTOs (not entities)
+- Method names can be in Spanish (e.g., `registrar`, `autenticar`)
 
-**Configuration Properties**:
-```java
-@Component
-@ConfigurationProperties(prefix = "api.clima")
-public class Clima {
-    private String url;
-    private int timeout;
+#### Repository Layer
+- In-memory storage using HashMap
+- Auto-increment ID with `idCounter`
+- Return `Optional<T>` for nullable results
+- Method names: `findById`, `findByEmail`, `existsByEmail`, `save`, `deleteById`
 
-    public Clima() { }
+### DTOs and Validation
+- Use `*RequestDTO` for input, `*ResponseDTO` for output
+- Use Jakarta Validation annotations on DTOs
+- Validation annotations: `@NotBlank`, `@Email`, `@Size`, `@Min`, `@Max`
 
-    public String getUrl() { return url; }
-    public void setUrl(String url) { this.url = url; }
-    public int getTimeout() { return timeout; }
-    public void setTimeout(int timeout) { this.timeout = timeout; }
-}
-```
+### Error Handling
+- Use `@RestControllerAdvice` for global exception handling
+- Create custom exception classes for domain errors
+- Return `ErrorResponse` with status, message, and timestamp
 
-**Service**:
-```java
-@Service
-public class InfoService {
-    private final AppConfig appConfig;
+### Mapper Pattern
+- Use `@Component` for mapper classes
+- Methods: `toEntity()` and `toDTO()`
+- Always null-check parameters before mapping
 
-    public InfoService(AppConfig appConfig) {
-        this.appConfig = appConfig;
-    }
-}
-```
+### Testing Conventions
+- Test classes: `*Tests.java` in `src/test/java/`
+- Use JUnit 5 (`org.junit.jupiter.api.Test`)
+- Use `@SpringBootTest` for integration tests
+- Use `assertTrue`, `assertEquals` from `org.junit.jupiter.api.Assertions`
 
-## Spring Annotations
-
-| Annotation | Purpose |
-|------------|---------|
-| `@SpringBootApplication` | Main application class |
-| `@Component` | Generic Spring bean |
-| `@Service` | Service layer |
-| `@RestController` | REST API controller |
-| `@Configuration` | Configuration class |
-| `@ConfigurationProperties` | Type-safe config binding |
-| `@GetMapping`, `@PostMapping`, etc. | HTTP mappings |
-| `@Value` | Simple property injection |
-
-## Configuration Files
-
-**Location**: `src/main/resources/`
-- `application.yml` - Default configuration
-- `application-{profile}.yml` - Profile overrides (dev, prod)
-
-```yaml
-mi:
-  app:
-    nombre: "Sistema"
-    version: "1.0.0"
-api:
-  clima:
-    timeout: 3000
-```
-
-## Testing
-
-**Unit Test**:
-```java
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
-
-class AppTest {
-    @Test
-    void shouldAnswerWithTrue() {
-        assertTrue(true);
-    }
-}
-```
-
-**Integration Test**:
-```java
-@SpringBootTest
-class Proyecto02ApplicationTests {
-    @Test
-    void contextLoads() { }
-}
-```
-
-## Error Handling
-- Use try-catch for recoverable errors
-- Let unchecked exceptions propagate
-- Use `System.out.println()` for logging
-- Consider `@ControllerAdvice` for API exceptions
+## Project-Specific AGENTS.md Files
+Each project has its own AGENTS.md with more detailed guidelines:
+- `Nivel_12/proyecto01/AGENTS.md` - Configuration API with profiles
+- `Nivel_13/proyecto02/AGENTS.md` - REST API with DTOs and validation
 
 ## Important Notes
-1. Always run `mvn test` before commits
-2. Use constructor injection (avoid field injection)
-3. Follow JavaBean conventions for config properties
-4. Prefer `@ConfigurationProperties` over `@Value` for structured config
-5. Profile-specific configs via `spring.profiles.active`
-
-## Directory Structure
-```
-Nivel_12/
-├── proyecto01/
-│   ├── pom.xml
-│   └── src/main/
-│       ├── java/com/achiridev/
-│       │   ├── App.java, config/, controller/, service/
-│       └── resources/
-│           ├── application.yml, application-dev.yml, application-prod.yml
-│       └── test/java/com/achiridev/
-└── proyecto02/
-    └── src/main/java/com/achiridev/, resources/
-```
+1. Always run `./mvnw test` before committing
+2. Use constructor injection - avoid field injection
+3. Return DTOs from controllers/services, not entities
+4. Validate input with Jakarta Validation annotations
+5. Use custom exceptions for domain-specific errors
+6. Null-check in mapper methods before mapping
+7. Prefer `Optional` for nullable return types in repository
