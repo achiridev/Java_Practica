@@ -13,10 +13,11 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long>{
     Page<Post> findAll(Pageable pageable);
 
-    Optional<Post> findByTituloContainingIgnoreCase(String titulo);
+    List<Post> findByTituloContainingIgnoreCase(String titulo);
 
+    @Query("SELECT p FROM Post p ORDER BY p.fecha DESC LIMIT 5")
     List<Post> findTop5OrderByFechaDesc();
 
-    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.comentarios WHERE p.id = :id")
-    Optional<Post> findByIdWithComentarios(@Param("id") Long id);
+    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.usuario LEFT JOIN FETCH p.comentarios WHERE p.id = :id")
+    Optional<Post> findByIdWithRelations(@Param("id") Long id);
 }

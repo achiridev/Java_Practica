@@ -81,8 +81,18 @@ src/main/java/com/achiridev/
 │   │   ├── UsuarioMapper.java
 │   │   ├── PostMapper.java
 │   │   └── ComentarioMapper.java
-│   └── UsuarioService.java
-└── controller/                      # Endpoints REST (pendiente)
+│   ├── UsuarioService.java
+│   ├── PostService.java
+│   └── ComentarioService.java
+├── controller/                      # Endpoints REST
+│   ├── UsuarioController.java
+│   ├── PostController.java
+│   └── ComentarioController.java
+└── exception/                       # Manejo de errores
+    ├── RecursoNoEncontradoException.java
+    ├── EmailDuplicadoException.java
+    ├── ErrorResponse.java
+    └── GlobalExceptionHandler.java
 ```
 
 ---
@@ -104,20 +114,7 @@ Organizar en este orden con línea en blanco entre grupos:
 - `FetchType.LAZY` para relaciones `@OneToMany` y `@ManyToOne`
 - Inicializar listas con `new ArrayList<>()` en la declaración
 - Constructor sin argumentos obligatorio para JPA
-
-```java
-@Entity
-@Table(name = "usuarios")
-public class Usuario {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
-    private List<Post> posts = new ArrayList<>();
-}
-```
+- Usar `@CreationTimestamp` para fechas automáticas
 
 ### DTOs (Data Transfer Objects)
 
@@ -125,25 +122,6 @@ public class Usuario {
 - Nombre: `<Entidad>RequestDTO` y `<Entidad>ResponseDTO`
 - **RequestDTO**: usa `Long <nombre>Id` para relaciones (no objetos)
 - **ResponseDTO**: usa DTOs anidados para relaciones (no entidades)
-
-```java
-// RequestDTO - recibe IDs
-public class PostRequestDTO {
-    @NotNull(message = "El ID del usuario es obligatorio")
-    private Long usuarioId;
-
-    @NotBlank(message = "El título es obligatorio")
-    private String titulo;
-}
-
-// ResponseDTO - devuelve DTOs anidados
-public class PostResponseDTO {
-    private Long id;
-    private String titulo;
-    private LocalDateTime fecha;
-    private UsuarioResponseDTO usuario;  // DTO anidado, no entidad
-}
-```
 
 ### Mappers (Entity <-> DTO)
 
@@ -153,58 +131,67 @@ public class PostResponseDTO {
 - Null-check obligatorio en ambos métodos
 - Usar inyección por constructor
 
+### Services
+
+- Ubicación: `com.achiridev.service/`
+- Anotación: `@Service`
+- Usar inyección por constructor
+- Manejar excepciones personalizadas del paquete `exception`
+- Devolver DTOs, nunca entidades
+- Usar `@Transactional` para mantener la sesión de Hibernate abierta
+- Métodos de lectura usar `@Transactional(readOnly = true)`
+
+### Controllers
+
+- Ubicación: `com.achiridev.controller/`
+- Usar `@Valid` en RequestDTOs para validación
+- Devolver `ResponseEntity<?>` con códigos HTTP apropiados
+
+### Excepciones Personalizadas
+
+- Ubicación: `com.achiridev.exception/`
+- Crear excepciones que extiendan `RuntimeException`
+- Usar `@RestControllerAdvice` para manejo global
+- Manejar: `RecursoNoEncontradoException`, validaciones, errores generales
+
+### Repositorios
+
+- Extender `JpaRepository<Entidad, Long>`
+- Usar `@Query` para consultas complejas (no nombres de método largos)
+- Para paginación usar `Page<Entidad>` con `Pageable`
+- Usar `JOIN FETCH` para cargar relaciones LAZY en una sola query
+
 ```java
-@Component
-public class PostMapper {
-
-    private final UsuarioMapper usuarioMapper;
-
-    public PostMapper(UsuarioMapper usuarioMapper) {
-        this.usuarioMapper = usuarioMapper;
-    }
-
-    public Post toEntity(PostRequestDTO dto, Usuario usuario) {
-        if (dto == null) return null;
-        Post post = new Post();
-        post.setUsuario(usuario)
-        post.setTitulo(dto.getTitulo());
-        return post;
-    }
-
-    public PostResponseDTO toDTO(Post post) {
-        if (post == null) return null;
-        PostResponseDTO dto = new PostResponseDTO();
-        dto.setTitulo(post.getTitulo());
-        dto.setUsuario(usuarioMapper.toDTO(post.getUsuario()));
-        return dto;
-    }
-}
+@Query("SELECT p FROM Post p JOIN FETCH p.usuario WHERE p.id = :id")
+Optional<Post> findByIdWithRelations(@Param("id") Long id);
 ```
-
-### Convenciones de Nombres
-
-| Elemento | Convención | Ejemplo |
-|----------|------------|---------|
-| Clases | PascalCase | `Usuario`, `PostMapper` |
-| DTOs | PascalCase + Suffix | `UsuarioRequestDTO`, `PostResponseDTO` |
-| Variables | camelCase | `usuarioId`, `nombreCompleto` |
-| Columnas BD | snake_case | `usuario_id`, `fecha_creacion` |
-| Métodos | camelCase | `getById()`, `toDTO()` |
-| Packages | lowercase | `com.achiridev.dto` |
 
 ---
 
 ## Validación con Jakarta Validation
 
-En RequestDTOs usar anotaciones de validación:
-
 ```java
 @NotBlank(message = "El campo es obligatorio")
 @Email(message = "El email debe ser válido")
-@Size(min = 2, max = 100, message = "El tamaño debe ser entre 2 y 100")
+@Size(min = 2, max = 100)
 @NotNull(message = "El ID es obligatorio")
-@Min(value = 1, message = "El valor mínimo es 1")
 ```
+
+---
+
+## Endpoints API
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| POST | `/api/usuario` | Crear usuario |
+| GET | `/api/usuario/{id}` | Obtener usuario por ID |
+| POST | `/api/post` | Crear post |
+| GET | `/api/post/{id}` | Obtener post por ID |
+| GET | `/api/posts` | Listar posts (paginado) |
+| GET | `/api/post?titulo=x` | Buscar por título |
+| GET | `/api/posts/recientes` | Top 5 posts recientes |
+| POST | `/api/comentario` | Crear comentario |
+| GET | `/api/comentario/{id}` | Obtener comentario por ID |
 
 ---
 
@@ -221,23 +208,16 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
 
   jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
       ddl-auto: update
     show-sql: true
 ```
 
 **Variables de entorno requeridas**:
-- `DB_URL` - JDBC URL (ej: `jdbc:mariadb://localhost:3306/blog`)
+- `DB_URL` - JDBC URL
 - `DB_USERNAME` - Usuario de MariaDB
 - `DB_PASSWORD` - Contraseña de MariaDB
-
----
-
-## Pruebas
-
-- Clase: `src/test/java/com/achiridev/Proyecto01ApplicationTests.java`
-- Usar `@SpringBootTest` para tests de integración
-- Usar JUnit 5 (`org.junit.jupiter.api.Test`)
 
 ---
 
@@ -247,5 +227,8 @@ spring:
 2. **FetchType.LAZY** - Las relaciones se cargan bajo demanda
 3. **Constructor vacío** - Las entidades JPA lo requieren
 4. **Mapper null-check** - Siempre verificar null antes de mapear
-5. **RequestDTO usa IDs** - Para relaciones, recibir `Long <nombre>Id`, no objetos
-6. **ResponseDTO usa DTOs** - Para relaciones, devolver DTOs anidados, no entidades
+5. **RequestDTO usa IDs** - Para relaciones, recibir `Long <nombre>Id`
+6. **ResponseDTO usa DTOs** - Para relaciones, devolver DTOs anidados
+7. **Consultas complejas** - Usar `@Query` con `JOIN FETCH` para evitar N+1
+8. **@Transactional** - Usar en servicios para mantener sesión abierta
+9. **Excepciones** - Usar personalizadas para errores de negocio
