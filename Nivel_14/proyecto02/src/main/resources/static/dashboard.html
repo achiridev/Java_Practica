@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos App - Dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="dashboard">
+        <nav class="navbar">
+            <div class="navbar-brand">📦 Pedidos App</div>
+            <div class="navbar-user">
+                <span id="user-name">Hola, Usuario</span>
+                <button class="btn-logout" onclick="Dashboard.cerrarSesion()">Cerrar Sesión</button>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="tabs">
+                <div class="tab active" data-tab="productos" onclick="App.tabs.switch('productos')">Productos</div>
+                <div class="tab" data-tab="pedidos" onclick="App.tabs.switch('pedidos')">Pedidos</div>
+                <div class="tab" data-tab="carrito" onclick="App.tabs.switch('carrito')">🛒 Carrito <span id="cart-count" class="badge badge-primary">0</span></div>
+            </div>
+
+            <!-- Productos Tab -->
+            <div id="productos" class="tab-content active">
+                <div class="grid grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">➕ Crear Producto</h3>
+                        </div>
+                        <form id="producto-form">
+                            <div class="form-group">
+                                <label for="producto-nombre">Nombre del Producto</label>
+                                <input type="text" id="producto-nombre" name="nombre" required minlength="2" maxlength="100" placeholder="Laptop HP">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="producto-precio">Precio ($)</label>
+                                    <input type="number" id="producto-precio" name="precio" required min="1" step="0.01" placeholder="1500000">
+                                </div>
+                                <div class="form-group">
+                                    <label for="producto-stock">Stock</label>
+                                    <input type="number" id="producto-stock" name="stock" required min="0" placeholder="10">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success">Crear Producto</button>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">📋 Últimos Productos</h3>
+                        </div>
+                        <div id="productos-lista" class="table-container">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📦</div>
+                                <p>No hay productos registrados</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pedidos Tab -->
+            <div id="pedidos" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">📋 Lista de Pedidos</h3>
+                        <div>
+                            <button class="btn btn-sm btn-primary" onclick="Dashboard.cargarPedidos()">Actualizar</button>
+                        </div>
+                    </div>
+                    <div id="pedidos-lista">
+                        <div class="loading"><div class="spinner"></div></div>
+                    </div>
+                    <div id="pedidos-pagination" class="pagination"></div>
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">🔍 Pedidos por Cliente</h3>
+                        </div>
+                        <form id="buscar-cliente-form">
+                            <div class="form-group">
+                                <label for="buscar-cliente-id">ID del Cliente</label>
+                                <input type="number" id="buscar-cliente-id" required placeholder="Ingresa el ID del cliente">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Buscar Pedidos</button>
+                        </form>
+                        <div id="pedidos-cliente-resultado" class="table-container" style="margin-top: 16px;"></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">🏆 Top 5 Pedidos por Monto</h3>
+                        </div>
+                        <button class="btn btn-success" onclick="Dashboard.cargarTopPedidos()" style="margin-bottom: 16px;">Ver Top 5</button>
+                        <div id="top-pedidos-lista" class="table-container">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">🏆</div>
+                                <p>Sin datos aún</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carrito Tab -->
+            <div id="carrito" class="tab-content">
+                <div class="grid grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">🛒 Carrito de Compras</h3>
+                        </div>
+                        <div id="carrito-items" class="cart-items">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">🛒</div>
+                                <p>El carrito está vacío</p>
+                            </div>
+                        </div>
+                        <div class="cart-total">
+                            <span>Total:</span>
+                            <span id="carrito-total">$0</span>
+                        </div>
+                        <div class="cart-actions">
+                            <button class="btn btn-danger" onclick="Dashboard.vaciarCarrito()">Vaciar Carrito</button>
+                            <button class="btn btn-success" onclick="Dashboard.crearPedido()">Realizar Pedido</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">➕ Agregar al Carrito</h3>
+                        </div>
+                        <form id="carrito-form">
+                            <input type="hidden" id="carrito-cliente-id">
+                            <div class="form-group">
+                                <label for="carrito-producto">Seleccionar Producto</label>
+                                <select id="carrito-producto" required>
+                                    <option value="">-- Seleccionar --</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="carrito-cantidad">Cantidad</label>
+                                <input type="number" id="carrito-cantidad" required min="1" value="1" placeholder="1">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Agregar al Carrito</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/app.js"></script>
+    <script>
+        const Dashboard = {
+            productos: [],
+            carrito: [],
+            pedidoActual: { page: 0, size: 10 },
+
+            init() {
+                if (!App.session.estaActiva()) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                const usuario = App.session.obtener();
+                document.getElementById('user-name').textContent = `Hola, ${usuario.nombres}`;
+                document.getElementById('carrito-cliente-id').value = usuario.id;
+                
+                this.setupEventListeners();
+                this.cargarProductosParaSelect();
+                this.cargarListaProductos();
+                this.cargarPedidos();
+            },
+
+            setupEventListeners() {
+                document.getElementById('producto-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.crearProducto();
+                });
+
+                document.getElementById('buscar-cliente-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.buscarPedidosPorCliente();
+                });
+
+                document.getElementById('carrito-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.agregarAlCarrito();
+                });
+            },
+
+            async crearProducto() {
+                const nombre = document.getElementById('producto-nombre').value;
+                const precio = parseFloat(document.getElementById('producto-precio').value);
+                const stock = parseInt(document.getElementById('producto-stock').value);
+
+                try {
+                    const producto = await api.producto.crear({ nombre, precio, stock });
+                    App.notificaciones.success(`Producto "${producto.nombre}" creado con ID: ${producto.id}`);
+                    document.getElementById('producto-form').reset();
+                    this.cargarProductosParaSelect();
+                    this.cargarListaProductos();
+                } catch (error) {
+                    App.notificaciones.error(error.message || 'Error al crear producto');
+                }
+            },
+
+            async cargarListaProductos() {
+                const container = document.getElementById('productos-lista');
+                container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+                try {
+                    const data = await api.producto.listar(0, 20);
+                    const productos = data.content || [];
+
+                    if (productos.length === 0) {
+                        container.innerHTML = `
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📦</div>
+                                <p>No hay productos registrados</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    container.innerHTML = `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Precio</th>
+                                    <th>Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${productos.map(p => `
+                                    <tr>
+                                        <td>${p.id}</td>
+                                        <td>${p.nombre}</td>
+                                        <td>$${p.precio}</td>
+                                        <td>${p.stock}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                } catch (error) {
+                    container.innerHTML = `<div class="empty-state"><p>Error: ${error.message}</p></div>`;
+                }
+            },
+
+            async cargarProductosParaSelect() {
+                try {
+                    const data = await api.producto.listar(0, 100);
+                    const productos = data.content || [];
+                    
+                    const select = document.getElementById('carrito-producto');
+                    select.innerHTML = '<option value="">-- Seleccionar --</option>';
+                    
+                    productos.forEach(p => {
+                        const option = document.createElement('option');
+                        option.value = JSON.stringify({ id: p.id, nombre: p.nombre, precio: p.precio, stock: p.stock });
+                        option.textContent = `${p.nombre} - $${p.precio} (Stock: ${p.stock})`;
+                        select.appendChild(option);
+                    });
+
+                    this.productos = productos;
+                } catch (error) {
+                    console.error('Error cargando productos:', error);
+                }
+            },
+
+            agregarAlCarrito() {
+                const productoData = document.getElementById('carrito-producto').value;
+                const cantidad = parseInt(document.getElementById('carrito-cantidad').value);
+                const clienteIdInput = document.getElementById('carrito-cliente-id').value;
+                
+                if (!clienteIdInput || isNaN(clienteIdInput)) {
+                    App.notificaciones.error('Error: ID de cliente no válido. Cierra sesión e inicia de nuevo.');
+                    return;
+                }
+
+                const clienteId = parseInt(clienteIdInput);
+
+                if (!productoData) {
+                    App.notificaciones.warning('Selecciona un producto');
+                    return;
+                }
+
+                const producto = JSON.parse(productoData);
+                
+                if (cantidad > producto.stock) {
+                    App.notificaciones.error(`Stock insuficiente. Máximo disponible: ${producto.stock}`);
+                    return;
+                }
+
+                const existente = this.carrito.find(item => item.producto.id === producto.id);
+                if (existente) {
+                    existente.cantidad += cantidad;
+                    if (existente.cantidad > producto.stock) {
+                        App.notificaciones.error('Stock insuficiente para esa cantidad');
+                        existente.cantidad -= cantidad;
+                        return;
+                    }
+                } else {
+                    this.carrito.push({ producto, cantidad, clienteId });
+                }
+
+                App.notificaciones.success(`${producto.nombre} añadido al carrito`);
+                this.actualizarCarrito();
+                document.getElementById('carrito-cantidad').value = 1;
+            },
+
+            actualizarCarrito() {
+                const container = document.getElementById('carrito-items');
+                const countBadge = document.getElementById('cart-count');
+                const totalSpan = document.getElementById('carrito-total');
+
+                countBadge.textContent = this.carrito.length;
+
+                if (this.carrito.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🛒</div>
+                            <p>El carrito está vacío</p>
+                        </div>
+                    `;
+                    totalSpan.textContent = '$0';
+                    return;
+                }
+
+                let total = 0;
+                container.innerHTML = this.carrito.map((item, index) => {
+                    const subtotal = item.producto.precio * item.cantidad;
+                    total += subtotal;
+                    return `
+                        <div class="cart-item">
+                            <div class="cart-item-info">
+                                <div class="cart-item-name">${item.producto.nombre}</div>
+                                <div class="cart-item-price">$${item.producto.precio} x ${item.cantidad} = $${subtotal}</div>
+                            </div>
+                            <div class="cart-item-actions">
+                                <button class="btn-sm btn-danger" onclick="Dashboard.quitarDelCarrito(${index})">✕</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                totalSpan.textContent = `$${total}`;
+            },
+
+            quitarDelCarrito(index) {
+                const item = this.carrito[index];
+                this.carrito.splice(index, 1);
+                App.notificaciones.info(`${item.producto.nombre} eliminado del carrito`);
+                this.actualizarCarrito();
+            },
+
+            vaciarCarrito() {
+                if (this.carrito.length === 0) {
+                    App.notificaciones.warning('El carrito ya está vacío');
+                    return;
+                }
+                this.carrito = [];
+                this.actualizarCarrito();
+                App.notificaciones.success('Carrito vaciado');
+            },
+
+            async crearPedido() {
+                if (this.carrito.length === 0) {
+                    App.notificaciones.warning('El carrito está vacío');
+                    return;
+                }
+
+                const usuario = App.session.obtener();
+                const clienteId = usuario?.id;
+                
+                if (!clienteId) {
+                    App.notificaciones.error('Error: Sesión no válida. Cierra sesión e inicia de nuevo.');
+                    return;
+                }
+                
+                console.log('Cliente ID:', clienteId);
+                console.log('Carrito:', this.carrito);
+                
+                const detalles = this.carrito.map(item => ({
+                    producto_id: item.producto.id,
+                    cantidad: item.cantidad
+                }));
+
+                console.log('Request:', { cliente_id: clienteId, detallePedido: detalles });
+
+                try {
+                    const pedido = await api.pedido.crear({
+                        cliente_id: clienteId,
+                        detallePedido: detalles
+                    });
+                    
+                    App.notificaciones.success(`Pedido #${pedido.id} creado exitosamente! Total: $${pedido.total}`);
+                    this.carrito = [];
+                    this.actualizarCarrito();
+                    this.cargarPedidos();
+                    this.cargarProductosParaSelect();
+                } catch (error) {
+                    console.error('Error al crear pedido:', error);
+                    App.notificaciones.error(error.message || 'Error al crear el pedido. Verifica la consola para más detalles.');
+                }
+            },
+
+            async cargarPedidos(page = 0) {
+                this.pedidoActual.page = page;
+                const container = document.getElementById('pedidos-lista');
+                container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+                try {
+                    const data = await api.pedido.listar(page, this.pedidoActual.size);
+                    this.renderizarPedidos(data, page);
+                } catch (error) {
+                    container.innerHTML = `<div class="empty-state"><p>Error: ${error.message}</p></div>`;
+                }
+            },
+
+            renderizarPedidos(data, page = 0) {
+                const container = document.getElementById('pedidos-lista');
+                const pagination = document.getElementById('pedidos-pagination');
+
+                if (!data.content || data.content.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📋</div>
+                            <p>No hay pedidos</p>
+                        </div>
+                    `;
+                    pagination.innerHTML = '';
+                    return;
+                }
+
+                container.innerHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th>Total</th>
+                                <th>Detalles</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.content.map(pedido => `
+                                <tr>
+                                    <td>#${pedido.id}</td>
+                                    <td>${pedido.cliente?.nombres || 'N/A'}</td>
+                                    <td>${App.utils.formatDate(pedido.fecha)}</td>
+                                    <td>$${pedido.total}</td>
+                                    <td>${pedido.detalles?.length || 0} items</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+
+                let paginationHTML = '';
+                const totalPages = data.totalPages || 1;
+                
+                paginationHTML += `<button ${page === 0 ? 'disabled' : ''} onclick="Dashboard.cargarPedidos(${page - 1})">←</button>`;
+                
+                for (let i = 0; i < totalPages; i++) {
+                    paginationHTML += `<button class="${i === page ? 'active' : ''}" onclick="Dashboard.cargarPedidos(${i})">${i + 1}</button>`;
+                }
+                
+                paginationHTML += `<button ${page >= totalPages - 1 ? 'disabled' : ''} onclick="Dashboard.cargarPedidos(${page + 1})">→</button>`;
+                
+                pagination.innerHTML = paginationHTML;
+            },
+
+            async buscarPedidosPorCliente() {
+                const clienteId = parseInt(document.getElementById('buscar-cliente-id').value);
+                const container = document.getElementById('pedidos-cliente-resultado');
+                
+                container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+                try {
+                    const pedidos = await api.pedido.buscarPorCliente(clienteId);
+                    
+                    if (!pedidos || pedidos.length === 0) {
+                        container.innerHTML = '<div class="empty-state"><p>No se encontraron pedidos para este cliente</p></div>';
+                        return;
+                    }
+
+                    container.innerHTML = `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID Pedido</th>
+                                    <th>Fecha</th>
+                                    <th>Total</th>
+                                    <th>Items</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${pedidos.map(p => `
+                                    <tr>
+                                        <td>#${p.id}</td>
+                                        <td>${App.utils.formatDate(p.fecha)}</td>
+                                        <td>$${p.total}</td>
+                                        <td>${p.detalles?.length || 0}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    
+                    App.notificaciones.success(`Se encontraron ${pedidos.length} pedidos`);
+                } catch (error) {
+                    container.innerHTML = `<div class="empty-state"><p>Error: ${error.message}</p></div>`;
+                    App.notificaciones.error(error.message);
+                }
+            },
+
+            async cargarTopPedidos() {
+                const container = document.getElementById('top-pedidos-lista');
+                container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+                try {
+                    const pedidos = await api.pedido.topMonto();
+                    
+                    if (!pedidos || pedidos.length === 0) {
+                        container.innerHTML = '<div class="empty-state"><p>No hay pedidos</p></div>';
+                        return;
+                    }
+
+                    container.innerHTML = `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Cliente</th>
+                                    <th>Fecha</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${pedidos.map((p, i) => `
+                                    <tr>
+                                        <td>${i + 1} 🏆</td>
+                                        <td>${p.cliente?.nombres || 'N/A'}</td>
+                                        <td>${App.utils.formatDate(p.fecha)}</td>
+                                        <td><strong>$${p.total}</strong></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    
+                    App.notificaciones.success('Top 5 cargado');
+                } catch (error) {
+                    container.innerHTML = `<div class="empty-state"><p>Error: ${error.message}</p></div>`;
+                }
+            },
+
+            cerrarSesion() {
+                App.session.cerrar();
+                App.notificaciones.success('Sesión cerrada');
+                window.location.href = 'index.html';
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            Dashboard.init();
+        });
+    </script>
+</body>
+</html>

@@ -136,3 +136,122 @@ findTop5ByOrderByFechaDesc()
 - Problema N+1 y solución
 - `Pageable` en producción
 - JPQL con `JOIN FETCH`
+
+---
+
+## 🚀 PROYECTO 2 — Sistema de Ventas (Pedidos, Clientes y Productos)
+
+### 📌 Caso real
+
+Sistema tipo:
+
+- tienda online
+- ERP básico
+- sistema de facturación
+
+Problema real:
+
+- Un cliente hace pedidos
+- Un pedido tiene muchos productos
+- Todo debe ser transaccional
+
+### 🧩 Requisitos
+
+#### 🔹 Entidades
+
+- Cliente
+- Pedido
+- Producto
+
+Relaciones:
+
+- Cliente → Pedidos → `@OneToMany`
+- Pedido → Productos → `@ManyToMany`
+
+#### 🔹 Funcionalidades
+
+##### 1. Crear cliente
+
+##### 2. Crear producto
+
+##### 3. Crear pedido (🔥 IMPORTANTE)
+
+```http
+POST /api/pedidos
+```
+
+✔ Incluye:
+
+- cliente
+- lista de productos
+
+✔ calcular total automáticamente
+
+##### 4. Obtener pedidos con paginación
+
+```http
+GET /api/pedidos?page=0&size=10
+```
+
+##### 5. Buscar pedidos por cliente
+
+```java
+findByClienteId(Long id)
+```
+
+##### 6. Top pedidos por monto
+
+```java
+findTop5ByOrderByTotalDesc()
+```
+
+### 🛠️ Condiciones
+
+- ✔ Usar `@Transactional` en creación de pedido
+
+👉 Caso real:
+
+- si falla guardar productos → rollback completo
+- ✔ Usar:
+  - `JpaRepository`
+  - relaciones correctas
+- ✔ Evitar:
+  - cargar todo con `EAGER`
+
+💡 Bonus:
+
+- usar `@Query` para reportes:
+
+```java
+@Query("SELECT p FROM Pedido p WHERE p.total > :monto")
+```
+
+### 📤 Posibles salidas
+
+#### ✔️ Pedido creado
+
+```JSON
+{  
+  "id": 1,  
+  "cliente": "Daniel",  
+  "total": 500  
+}
+```
+
+#### ❌ Error (rollback)
+
+```JSON
+{  
+  "mensaje": "Error al crear pedido"  
+}
+```
+
+### 🧠 Aprendes
+
+- Transacciones reales (`@Transactional`)
+- Relaciones complejas (`ManyToMany`)
+- Lógica de negocio (cálculo de totales)
+- Queries derivadas avanzadas
+- Backend tipo empresa
+
+---
