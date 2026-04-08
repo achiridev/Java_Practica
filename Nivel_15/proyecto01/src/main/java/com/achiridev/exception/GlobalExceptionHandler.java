@@ -1,0 +1,82 @@
+package com.achiridev.exception;
+
+import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(RecursoNoEncontradoException.class)
+    public ResponseEntity<ErrorResponse> manejarNoEncontrado(
+            RecursoNoEncontradoException ex) {
+
+        ErrorResponse error = new ErrorResponse(
+                404,
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> manejarBadRequest(
+            IllegalArgumentException ex) {
+
+        ErrorResponse error = new ErrorResponse(
+                400,
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) {
+        ErrorResponse error = new ErrorResponse(
+                401,
+                "Credenciales incorrectas",
+                LocalDateTime.now()
+        );
+	
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)  
+    public ResponseEntity<Map<String, String>> manejarValidaciones(  
+            MethodArgumentNotValidException ex) {  
+    
+        Map<String, String> errores = new HashMap<>();  
+    
+        ex.getBindingResult().getFieldErrors().forEach(error -> {  
+            errores.put(error.getField(), error.getDefaultMessage());  
+        });  
+    
+        return ResponseEntity.badRequest().body(errores);  
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> manejarGeneral(Exception ex) {
+        ex.printStackTrace();
+        
+        ErrorResponse error = new ErrorResponse(
+                500,
+                ex.getMessage() != null ? ex.getMessage() : "Error interno del servidor",
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(error);
+    }
+
+}
