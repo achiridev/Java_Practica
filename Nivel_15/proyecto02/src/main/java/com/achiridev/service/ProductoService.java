@@ -1,6 +1,6 @@
 package com.achiridev.service;
 
-import com.achiridev.controller.PageResponse;
+import com.achiridev.extra.PageResponse;
 import com.achiridev.dto.ProductoCreateDTO;
 import com.achiridev.dto.ProductoResponseDTO;
 import com.achiridev.dto.ProductoResumeDTO;

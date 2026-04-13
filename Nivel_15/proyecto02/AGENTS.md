@@ -23,8 +23,8 @@ Orden exacto:
 4. `com.achiridev.*`
 
 ### Convenciones de Nombres
-- Clases: PascalCase (`Producto`, `ProductoMapper`)
-- DTOs: PascalCase + suffix `*DTO` (`ProductoCreateDTO`, `ProductoResponseDTO`, `ProductoResumeDTO`)
+- Clases: PascalCase (`Producto`, `UsuarioMapper`)
+- DTOs: PascalCase + suffix `*DTO` (`ProductoCreateDTO`, `UsuarioResponseDTO`)
 - Métodos: camelCase (`toEntity`, `toResponseDTO`, `findById`, `findByNombre`, `save`, `update`, `deleteById`)
 - Variables: camelCase (`dto`, `producto`, `productoExistente`)
 - Excepciones: PascalCase + suffix `*Exception` (`RecursoNoEncontradoException`)
@@ -52,37 +52,47 @@ Orden exacto:
 src/main/java/com/achiridev/
 ├── Proyecto02Application.java       (Main Spring Boot)
 ├── config/
-│   └── SecurityConfig.java          (Configuración de seguridad)
+│   ├── SecurityConfig.java          (Seguridad con roles y permisos)
+│   ├── DataInitializer.java         (Inicializa roles y permisos en BD)
+│   └── RolRepository.java, PermisoRepository.java
 ├── controller/
 │   └── ProductoController.java      (REST API de productos)
 ├── dto/
-│   ├── ProductoCreateDTO.java       (Input con @NotBlank, @NotNull, @Positive)
-│   ├── ProductoResponseDTO.java     (Output completo)
-│   └── ProductoResumeDTO.java       (Output resumido)
+│   ├── ProductoCreateDTO.java       (Input producto)
+│   ├── ProductoResponseDTO.java     (Output producto completo)
+│   ├── ProductoResumeDTO.java       (Output producto resumido)
+│   ├── UsuarioCreateDTO.java        (Input registro usuario)
+│   ├── UsuarioLoginDTO.java         (Input login)
+│   └── UsuarioResponseDTO.java       (Output usuario)
 ├── exception/
 │   ├── RecursoNoEncontradoException.java
 │   └── RecursoYaExisteException.java
 ├── extra/
-│   └── PageResponse.java           (Wrapper para paginación)
+│   └── PageResponse.java            (Wrapper paginación)
 ├── mapper/
-│   └── ProductoMapper.java          (Conversión entity<->DTO)
+│   ├── ProductoMapper.java
+│   └── UsuarioMapper.java
 ├── model/
-│   ├── Producto.java               (Entidad JPA, BigDecimal precio)
-│   ├── Usuario.java
-│   ├── Rol.java
+│   ├── Producto.java                (Entidad JPA, BigDecimal precio)
+│   ├── Usuario.java                 (@Id @GeneratedValue, ManyToMany roles)
+│   ├── Rol.java                     (ManyToMany permisos)
 │   └── Permiso.java
 ├── repository/
-│   ├── ProductoRepository.java     (JpaRepository, findByNombre, existsByNombre)
-│   └── UsuarioRepository.java      (findByEmail, existsByEmail)
+│   ├── ProductoRepository.java      (findByNombre, existsByNombre)
+│   ├── UsuarioRepository.java       (findByEmail, existsByEmail)
+│   ├── RolRepository.java           (findByNombre)
+│   └── PermisoRepository.java
 ├── security/
 │   ├── jwt/
 │   │   ├── JwtAuthenticationFilter.java
 │   │   ├── JwtService.java
 │   │   └── JwtConfig.java
-│   └── user/
-│       └── CustomUserDetailsService.java
+│   ├── user/
+│   │   └── CustomUserDetailsService.java
+│   └── auth/
+│       └── AuthService.java         (login, registrarUsuario)
 └── service/
-    └── ProductoService.java         (CRUD: findById, findByNombre, save, update, deleteById)
+    └── ProductoService.java
 ```
 
 ## 4. Dependencias Clave (pom.xml)
@@ -98,13 +108,14 @@ src/main/java/com/achiridev/
 
 ## 5. Notas Importantes
 
-- Entidades usan `@Entity`, `@Table`, `@Id`, `@GeneratedValue`, `@Column(precision=10, scale=2)` para BigDecimal
-- DTOs usan anotaciones Jakarta: `@NotBlank`, `@NotNull`, `@Positive`, `@Size`
-- Repository extiende `JpaRepository<Entity, Long>` con métodos: `findByNombre`, `existsByNombre`
+- Entidades usan `@Entity`, `@Table`, `@Id`, `@GeneratedValue(strategy = GenerationType.IDENTITY)`
+- BigDecimal: `@Column(precision=10, scale=2)`
+- DTOs usan anotaciones Jakarta: `@NotBlank`, `@NotNull`, `@Positive`, `@Size`, `@Email`
+- Repository extiende `JpaRepository<Entity, Long>`
 - Mapper con null-check en todos los métodos
-- Excepciones personalizadas en paquete `exception`, extends `RuntimeException`
-- Usar `@RestControllerAdvice` para manejo global de excepciones
-- Precio en Producto, DTOs y Mapper es `BigDecimal` (no Double)
-- Autenticación JWT con `JwtAuthenticationFilter`, `JwtService` y `JwtConfig`
-- Paginación: servicio retorna `Page<Entity>`, controller usa `PageResponse` como wrapper
-- SecurityConfig configura `SecurityFilterChain` con `JWTFilter` y `ProviderManager`
+- Excepciones personalizadas extienden `RuntimeException`
+- Autenticación JWT con `JwtAuthenticationFilter`, `JwtService`, `JwtConfig`
+- Paginación: servicio retorna `Page<Entity>`, controller usa `PageResponse`
+- SecurityConfig: permisos con `hasAuthority()` y roles con `hasRole()`
+- CustomUserDetailsService carga roles y permisos como `GrantedAuthority`
+- DataInitializer crea permisos (READ_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT) y roles (ADMIN, MODERATOR, USER)
