@@ -1,3 +1,10 @@
 .directory
 Nivel_07/src/main/java/com/ConexionService.java
 Nivel_09/src/main/java/com/achiridev/ConexionService.java
+
+target/
+.idea/
+*.iml
+.vscode/
+*.log
+.env
