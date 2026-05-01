@@ -14,7 +14,6 @@ public class PedidoRepository {
     public PedidoRepository() {
         pedidos = new HashMap<>();
         idCounter = 1L;
-        inicializarPedidos();
     }
 
     public Pedido save(Pedido pedido) {
