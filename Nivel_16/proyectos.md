@@ -9,5 +9,20 @@ Los proyectos de este nivel seran testing de los anteriores proyectos
 
 - Testing de capa Controller
 - Testing de capa Service
+- Testing app completa
+
+---
+
+## 🚀 PROYECTO 2
+
+Los proyectos de este nivel seran testing de los anteriores proyectos
+**Estos son de los proyectos del nivel 14**
+
+### PROYECTO 1 — Sistema de Blog (Usuarios, Posts y Comentarios)
+
+- Testing de capa Controller
+- Testing de capa Service
+- Testing de capa Repository
+- Testing app completa
 
 ---
